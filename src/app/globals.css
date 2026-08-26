@@ -1,26 +1,254 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light, energetic base. Not stark pure white so color blocks still pop
+     against it, but bright enough that saturated section tints read clean. */
+  --bg: #ffffff;
+  --bg-raised: #f6f6f4;
+  --bg-raised-2: #eeeeec;
+
+  /* Text: warm near-black, never pure #000 */
+  --fg: #15171b;
+  --fg-muted: #565c66;
+  --fg-faint: #5f6570;
+
+  /* Hairlines, dark-tinted since the base is light */
+  --border: rgba(20, 22, 26, 0.09);
+  --border-strong: rgba(20, 22, 26, 0.16);
+
+  /* Color system: each hue has a job, not just decoration.
+     - base:  vivid, for solid fills (buttons, icons, borders at moderate opacity)
+     - deep:  darker/saturated, the only variant safe as TEXT on a light page
+     - soft:  a pale tint, for pill backgrounds and section-zone washes
+     - soft-border: a pale border to match `soft`
+     Teal marks the day-job / production-Flutter half of the site. Coral
+     marks the night / native-passion half. Gold is one rare highlight.
+     Sky, violet and pink live only in the category legend and Skills. */
+  --accent: #12b8a0;
+  --accent-deep: #0a7c6b;
+  --accent-soft: #eafbf6;
+  --accent-soft-border: rgba(18, 184, 160, 0.28);
+
+  --accent-warm: #ff6b4a;
+  --accent-warm-deep: #c23f1a;
+  --accent-warm-soft: #fff1ec;
+  --accent-warm-soft-border: rgba(255, 107, 74, 0.32);
+
+  --accent-gold: #ffb627;
+  --accent-gold-deep: #8a5a00;
+  --accent-gold-soft: #fff6e2;
+  --accent-gold-soft-border: rgba(255, 182, 39, 0.35);
+
+  --accent-sky: #22b2e8;
+  --accent-sky-deep: #0369a1;
+  --accent-violet: #8b5cf6;
+  --accent-violet-deep: #5b21b6;
+  --accent-pink: #f43f7a;
+  --accent-pink-deep: #be185d;
+
+  /* One radius system: soft everywhere, full-pill for interactive controls */
+  --radius-panel: 24px;
+  --radius-panel-inner: 18px;
+  --radius-pill: 999px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-bg-raised: var(--bg-raised);
+  --color-bg-raised-2: var(--bg-raised-2);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-border: var(--accent-soft-border);
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-warm-deep: var(--accent-warm-deep);
+  --color-accent-warm-soft: var(--accent-warm-soft);
+  --color-accent-warm-soft-border: var(--accent-warm-soft-border);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-gold-deep: var(--accent-gold-deep);
+  --color-accent-gold-soft: var(--accent-gold-soft);
+  --color-accent-gold-soft-border: var(--accent-gold-soft-border);
+  --color-accent-sky: var(--accent-sky);
+  --color-accent-sky-deep: var(--accent-sky-deep);
+  --color-accent-violet: var(--accent-violet);
+  --color-accent-violet-deep: var(--accent-violet-deep);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-pink-deep: var(--accent-pink-deep);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
+}
+
+html {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+::selection {
+  background: var(--accent-warm-soft-border);
+  color: var(--fg);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-raised-2);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+/* Glass panel: a frosted card floating above a color-zone section. Used
+   sparingly, only on project surfaces (see brief). */
+.glass-shell {
+  position: relative;
+  border-radius: var(--radius-panel);
+  border: 1px solid var(--border);
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.6)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 30px 60px -30px rgba(20, 22, 26, 0.22);
+}
+
+.glass-core {
+  border-radius: var(--radius-panel-inner);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+}
+
+.glass-blur {
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-blur {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--bg-raised);
+  }
+}
+
+/* A recurring motif: interactive demo/media moments get their own dark
+   "stage" so they read as a deliberate spotlight, not a theme leak. Every
+   Tailwind token class (bg-bg, text-fg, border-border, ...) used inside an
+   element carrying this class picks up these re-pointed values, because
+   Tailwind's generated utilities resolve var(--fg) etc. at the point of
+   use, following normal CSS custom-property inheritance. */
+.demo-stage {
+  --bg: #14161a;
+  --bg-raised: #1b1e23;
+  --bg-raised-2: #24272d;
+  --fg: #f4f5f7;
+  --fg-muted: #aeb4bd;
+  --fg-faint: #838a97;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  color-scheme: dark;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.demo-stage.glass-shell {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    155deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.02)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 30px 70px -28px rgba(0, 0, 0, 0.55);
+}
+
+.demo-stage .glass-core {
+  background: var(--bg-raised);
+}
+
+.demo-stage .glass-blur {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Animated gradient sweep, reserved for a single word of emphasis in the
+   hero headline. Communicates the "two halves" narrative of the page. */
+.gradient-ink {
+  background: linear-gradient(
+    100deg,
+    var(--accent-deep) 0%,
+    var(--accent-warm-deep) 50%,
+    var(--accent-deep) 100%
+  );
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-sweep 7s ease-in-out infinite;
+}
+
+@keyframes gradient-sweep {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes blob-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(3%, -4%) scale(1.06);
+  }
+  66% {
+    transform: translate(-3%, 3%) scale(0.96);
+  }
+}
+
+.blob-animate {
+  animation: blob-float 16s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
