@@ -15,11 +15,12 @@ export const profile = {
   instagram: null as string | null,
 };
 
-// Confirmed production domain — feeds metadataBase (layout.tsx), robots.ts,
-// and sitemap.ts, so this is the only place it needs to change. If the site
-// goes live first on a GitHub Pages/host URL before this domain is wired up
-// via DNS, OG previews and the sitemap will point here until it is.
-export const siteUrl = "https://raseel.dev";
+// Feeds metadataBase (layout.tsx), robots.ts, and sitemap.ts, so this is the
+// only place it needs to change. Temporarily the live Vercel URL rather than
+// raseel.dev — that domain isn't wired up yet, and metadata pointing at a
+// domain serving nothing would be worse than pointing at what's actually
+// live. Swap back to "https://raseel.dev" once that domain is connected.
+export const siteUrl = "https://raseelportfolio.vercel.app";
 
 // The hero's poetic line isn't one fixed sentence — it cycles through this
 // set (see HeroGlow.tsx), starting on a random one and fading to a
