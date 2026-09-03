@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 interface RevealProps {
   children: ReactNode;
@@ -70,10 +70,12 @@ export function RevealGroup({ children, className, stagger = 0.08 }: RevealGroup
 export function RevealItem({
   children,
   className,
+  style,
   y = 16,
 }: {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   y?: number;
 }) {
   return (
@@ -87,6 +89,7 @@ export function RevealItem({
         },
       }}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>

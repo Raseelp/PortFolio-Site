@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { motion, useMotionValue, useReducedMotion } from "motion/react";
 import { ArrowUpRight } from "@phosphor-icons/react";
-import type { PointerEvent, ReactNode } from "react";
+import type { MouseEvent, PointerEvent, ReactNode } from "react";
+import { handleHashClick } from "@/lib/smoothAnchor";
+import { playClick } from "@/lib/sound";
 
 interface ButtonProps {
   href: string;
@@ -32,9 +34,9 @@ export function Button({
 
   const variants = {
     primary:
-      "bg-accent-warm text-[#1a0a05] hover:bg-accent-warm-deep hover:text-white shadow-[0_0_0_1px_rgba(255,107,74,0.4)]",
+      "border border-accent bg-transparent text-accent shadow-[0_0_20px_-4px_rgba(31,188,253,0.5)] hover:bg-accent hover:text-[#01141c]",
     secondary:
-      "bg-bg text-fg border border-border-strong hover:bg-black/[0.04] pr-6",
+      "bg-bg text-fg border border-border-strong hover:bg-white/[0.06] pr-6",
   };
 
   function handlePointerMove(e: PointerEvent<HTMLElement>) {
@@ -51,6 +53,12 @@ export function Button({
     my.set(0);
   }
 
+  function handleClick(e: MouseEvent<HTMLAnchorElement>) {
+    playClick();
+    handleHashClick(e, href);
+    onClick?.();
+  }
+
   const content = (
     <motion.span
       style={magnetic ? { x: mx, y: my } : undefined}
@@ -59,7 +67,7 @@ export function Button({
     >
       <span>{children}</span>
       {icon && variant === "primary" && (
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-black/15">
           <ArrowUpRight size={16} weight="bold" />
         </span>
       )}
@@ -72,7 +80,7 @@ export function Button({
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={onClick}
+        onClick={handleClick}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
         className={`${base} ${variants[variant]}`}
@@ -85,7 +93,7 @@ export function Button({
   return (
     <Link
       href={href}
-      onClick={onClick}
+      onClick={handleClick}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       className={`${base} ${variants[variant]}`}

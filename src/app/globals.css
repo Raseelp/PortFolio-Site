@@ -1,54 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  /* Light, energetic base. Not stark pure white so color blocks still pop
-     against it, but bright enough that saturated section tints read clean. */
-  --bg: #ffffff;
-  --bg-raised: #f6f6f4;
-  --bg-raised-2: #eeeeec;
+  /* Dark base with a deliberate cool-navy cast (not neutral grey) so the
+     whole page reads as one considered "midnight" palette that the blue
+     accent belongs to, rather than a grey dark-theme with blue bolted on. */
+  --bg: #0a0f16;
+  --bg-raised: #111a26;
+  --bg-raised-2: #182535;
 
-  /* Text: warm near-black, never pure #000 */
-  --fg: #15171b;
-  --fg-muted: #565c66;
-  --fg-faint: #5f6570;
+  /* Text: cool-tinted light grey, never pure white */
+  --fg: #e6ebf2;
+  --fg-muted: #93a2b8;
+  --fg-faint: #6c7b91;
 
-  /* Hairlines, dark-tinted since the base is light */
-  --border: rgba(20, 22, 26, 0.09);
-  --border-strong: rgba(20, 22, 26, 0.16);
+  /* Hairlines, cool-tinted since the base is dark */
+  --border: rgba(200, 220, 245, 0.08);
+  --border-strong: rgba(200, 220, 245, 0.16);
 
   /* Color system: each hue has a job, not just decoration.
      - base:  vivid, for solid fills (buttons, icons, borders at moderate opacity)
-     - deep:  darker/saturated, the only variant safe as TEXT on a light page
-     - soft:  a pale tint, for pill backgrounds and section-zone washes
-     - soft-border: a pale border to match `soft`
-     Teal marks the day-job / production-Flutter half of the site. Coral
-     marks the night / native-passion half. Gold is one rare highlight.
-     Sky, violet and pink live only in the category legend and Skills. */
-  --accent: #12b8a0;
-  --accent-deep: #0a7c6b;
-  --accent-soft: #eafbf6;
-  --accent-soft-border: rgba(18, 184, 160, 0.28);
+     - deep:  a lighter/paler tint of the same hue, legible as TEXT on the dark page
+     - soft:  a translucent tint, for pill backgrounds and glows
+     - soft-border: a translucent border to match `soft`
+     Flutter's own brand turquoise-blue is the single signature accent —
+     CTAs, the current-role marker, the cursor, one line of the hero
+     split-type. Purple and amber mark the two Selected Works cards, kept
+     deliberately distinct from the signature blue rather than near-copies
+     of it. Periwinkle is a rare tertiary touch (stat numbers). */
+  --accent: #1fbcfd;
+  --accent-deep: #8fe3ff;
+  --accent-soft: rgba(31, 188, 253, 0.12);
+  --accent-soft-border: rgba(31, 188, 253, 0.4);
 
-  --accent-warm: #ff6b4a;
-  --accent-warm-deep: #c23f1a;
-  --accent-warm-soft: #fff1ec;
-  --accent-warm-soft-border: rgba(255, 107, 74, 0.32);
+  --accent-warm: #9880ff;
+  --accent-warm-deep: #b9a8ff;
+  --accent-warm-soft: rgba(152, 128, 255, 0.14);
+  --accent-warm-soft-border: rgba(152, 128, 255, 0.4);
 
-  --accent-gold: #ffb627;
-  --accent-gold-deep: #8a5a00;
-  --accent-gold-soft: #fff6e2;
-  --accent-gold-soft-border: rgba(255, 182, 39, 0.35);
+  --accent-gold: #ffb238;
+  --accent-gold-deep: #ffd27a;
+  --accent-gold-soft: rgba(255, 178, 56, 0.14);
+  --accent-gold-soft-border: rgba(255, 178, 56, 0.4);
 
-  --accent-sky: #22b2e8;
-  --accent-sky-deep: #0369a1;
-  --accent-violet: #8b5cf6;
-  --accent-violet-deep: #5b21b6;
-  --accent-pink: #f43f7a;
-  --accent-pink-deep: #be185d;
+  --accent-sky: #6c8cff;
+  --accent-sky-deep: #aac0ff;
+  --accent-violet: #9880ff;
+  --accent-violet-deep: #b9a8ff;
+  --accent-pink: #ff6ba8;
+  --accent-pink-deep: #ff9bc4;
 
-  /* One radius system: soft everywhere, full-pill for interactive controls */
-  --radius-panel: 24px;
-  --radius-panel-inner: 18px;
+  --radius-panel: 28px;
+  --radius-panel-inner: 20px;
   --radius-pill: 999px;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -82,7 +84,7 @@
   --color-accent-violet-deep: var(--accent-violet-deep);
   --color-accent-pink: var(--accent-pink);
   --color-accent-pink-deep: var(--accent-pink-deep);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: "General Sans", system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -91,7 +93,7 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
@@ -100,7 +102,7 @@ body {
 }
 
 ::selection {
-  background: var(--accent-warm-soft-border);
+  background: var(--accent-soft-border);
   color: var(--fg);
 }
 
@@ -127,12 +129,12 @@ body {
   border: 1px solid var(--border);
   background: linear-gradient(
     155deg,
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0.6)
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
   );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 30px 60px -30px rgba(20, 22, 26, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 30px 70px -28px rgba(0, 0, 0, 0.6);
 }
 
 .glass-core {
@@ -142,7 +144,7 @@ body {
 }
 
 .glass-blur {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.05);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   backdrop-filter: blur(20px) saturate(140%);
 }
@@ -155,26 +157,6 @@ body {
   }
 }
 
-/* A recurring motif: interactive demo/media moments get their own dark
-   "stage" so they read as a deliberate spotlight, not a theme leak. Every
-   Tailwind token class (bg-bg, text-fg, border-border, ...) used inside an
-   element carrying this class picks up these re-pointed values, because
-   Tailwind's generated utilities resolve var(--fg) etc. at the point of
-   use, following normal CSS custom-property inheritance. */
-.demo-stage {
-  --bg: #14161a;
-  --bg-raised: #1b1e23;
-  --bg-raised-2: #24272d;
-  --fg: #f4f5f7;
-  --fg-muted: #aeb4bd;
-  --fg-faint: #838a97;
-  --border: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  color-scheme: dark;
-  background: var(--bg);
-  color: var(--fg);
-}
-
 .demo-stage.glass-shell {
   border-color: rgba(255, 255, 255, 0.12);
   background: linear-gradient(
@@ -184,7 +166,7 @@ body {
   );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 30px 70px -28px rgba(0, 0, 0, 0.55);
+    0 30px 70px -28px rgba(0, 0, 0, 0.7);
 }
 
 .demo-stage .glass-core {
@@ -199,47 +181,211 @@ body {
   text-wrap: balance;
 }
 
-/* Animated gradient sweep, reserved for a single word of emphasis in the
-   hero headline. Communicates the "two halves" narrative of the page. */
-.gradient-ink {
-  background: linear-gradient(
-    100deg,
-    var(--accent-deep) 0%,
-    var(--accent-warm-deep) 50%,
-    var(--accent-deep) 100%
-  );
-  background-size: 240% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradient-sweep 7s ease-in-out infinite;
+/* Flat single-hue emphasis — the reference treats each split-type line as
+   one solid color, not a gradient sweep. Kept as a class for anywhere a
+   headline word needs the lime signature. */
+.text-ink {
+  color: var(--accent);
 }
 
-@keyframes gradient-sweep {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
+/* Animated mesh-gradient blob, the hero visual's signature moment. */
 @keyframes blob-float {
   0%,
   100% {
     transform: translate(0, 0) scale(1);
   }
   33% {
-    transform: translate(3%, -4%) scale(1.06);
+    transform: translate(4%, -5%) scale(1.08);
   }
   66% {
-    transform: translate(-3%, 3%) scale(0.96);
+    transform: translate(-4%, 4%) scale(0.94);
   }
 }
 
 .blob-animate {
   animation: blob-float 16s ease-in-out infinite;
+}
+
+/* Continuous tech-stack marquee. Duplicated content track scrolls one full
+   copy-width to the left, looping seamlessly. */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll 32s linear infinite;
+}
+
+/* Liquid glass: refractive frosted-glass surface for floating UI (the nav
+   button). Two backdrop-filter declarations stack on purpose — browsers
+   that don't understand url()-referenced SVG filters keep the plain blur;
+   browsers that do, get the full chromatic-displacement glass look. */
+.liquid-glass {
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(16px) saturate(1.1);
+  backdrop-filter: url("#liquid-glass-filter") saturate(1.1);
+  box-shadow:
+    inset 0 0 2px 1px color-mix(in oklch, white 35%, transparent),
+    inset 0 0 10px 4px color-mix(in oklch, white 15%, transparent),
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 16px 56px rgba(0, 0, 0, 0.18);
+}
+
+/* Timeline current-marker pulse — exact recipe from the reference site's
+   first-child node: a soft scale+glow breathe, baking the diamond's 45deg
+   rotation into every keyframe step (a CSS transform animation silently
+   replaces a separately-applied static `transform`, so it has to live
+   here, not alongside a Tailwind `rotate-45` utility). */
+@keyframes timeline-pulse {
+  0% {
+    transform: rotate(45deg) scale(1);
+    box-shadow: 0 0 5px 1px var(--accent);
+  }
+  50% {
+    transform: rotate(45deg) scale(1.2);
+    box-shadow: 0 0 10px 2px rgba(31, 188, 253, 0.4);
+  }
+  100% {
+    transform: rotate(45deg) scale(1);
+    box-shadow: 0 0 5px 1px var(--accent);
+  }
+}
+
+.timeline-pulse {
+  animation: timeline-pulse 2.5s ease infinite;
+}
+
+/* Slow diagonal shimmer for the project media placeholder — reads as "a
+   video will load here" rather than a static gray box. */
+@keyframes media-shimmer {
+  0% {
+    background-position: -40% -40%;
+  }
+  100% {
+    background-position: 140% 140%;
+  }
+}
+
+.media-shimmer {
+  background-image: linear-gradient(
+    115deg,
+    transparent 40%,
+    var(--accent-soft) 50%,
+    transparent 60%
+  );
+  background-size: 260% 260%;
+  animation: media-shimmer 5s ease-in-out infinite alternate;
+}
+
+/* Subtle static film-grain — a fixed full-viewport SVG noise texture at
+   very low opacity, blended with `overlay` so it never washes out text.
+   Cheap (one inline data URI, no image request, no animation) and makes
+   the flat dark surfaces read as considered rather than flat. */
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+  opacity: 0.035;
+}
+
+/* Tech-stack view toggle — both paused by default, running only on
+   hover (see [animation-play-state] in TogglePreview.tsx). Flow's dots
+   loop left-to-right, a live miniature of the marquee; Browse's grid
+   squares pulse in a stagger, a live miniature of the tree revealing. */
+@keyframes tech-toggle-flow {
+  0% {
+    left: -10%;
+  }
+  100% {
+    left: 110%;
+  }
+}
+
+@keyframes tech-toggle-grid-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+}
+
+/* Small "current role" indicator dot in Work Experience — a plain opacity
+   breathe, distinct from `.timeline-pulse` (which bakes in a 45deg diamond
+   rotation this dot doesn't need). */
+@keyframes dot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.dot-pulse {
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+/* Footer links: nothing until you touch them, then the underline draws in
+   from the left (a transform, not a fade-in) and the trailing arrow slides
+   in with it — nothing to see until the hover, then a real underline being
+   drawn, not just an instant reveal. */
+.footer-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.footer-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.footer-link:hover::after,
+.footer-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.footer-link-arrow {
+  opacity: 0;
+  transform: translate(-4px, 4px);
+  transition:
+    opacity 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+
+.footer-link:hover .footer-link-arrow,
+.footer-link:focus-visible .footer-link-arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+/* Only hide the native cursor once CustomCursor has confirmed a real
+   fine-pointer device and mounted — never on touch, never before its
+   post-hydration check runs. */
+body.custom-cursor-active,
+body.custom-cursor-active a,
+body.custom-cursor-active button {
+  cursor: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -250,5 +396,31 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* The Snake game's "GAME ON"/"GAME OVER" moment (see HeroTagline.tsx) — a
+   rainbow shimmer across the site's own accent palette, not a flat color,
+   for the festival treatment. The reduced-motion catch-all above already
+   freezes the animation for anyone who needs it. */
+.festival-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.3));
+}
+
+.festival-text-animated {
+  background-size: 300% 100%;
+  animation: festival-shimmer 1.8s linear infinite;
+}
+
+@keyframes festival-shimmer {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
   }
 }
