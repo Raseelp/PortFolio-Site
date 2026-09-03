@@ -1,77 +1,72 @@
-import { EnvelopeSimple, GithubLogo, LinkedinLogo } from "@phosphor-icons/react/dist/ssr";
+"use client";
+
+import { ArrowUpRight, Heart } from "@phosphor-icons/react";
 import { Container } from "./ui/Container";
 import { Reveal } from "./ui/Reveal";
+import { ElasticDivider } from "./ui/ElasticDivider";
 import { profile } from "@/lib/content";
+import { playClick } from "@/lib/sound";
+
+function FooterLink({
+  href,
+  label,
+  external = true,
+}: {
+  href: string;
+  label: string;
+  external?: boolean;
+}) {
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      onClick={playClick}
+      className="footer-link text-[15px] text-fg-muted transition-colors hover:text-fg"
+    >
+      {label}
+      <ArrowUpRight size={13} weight="bold" className="footer-link-arrow" />
+    </a>
+  );
+}
 
 export function Contact() {
   return (
-    <section
-      id="contact"
-      className="py-24 text-white md:py-32"
-      style={{
-        background:
-          "linear-gradient(120deg, #0a7c6b 0%, #c23f1a 55%, #5b21b6 100%)",
-      }}
-    >
+    // Extra bottom padding here (beyond the usual section rhythm) is
+    // deliberate: GradualBlur is a fixed 10rem strip pinned to the bottom of
+    // the viewport, so at max scroll the last bit of content sits inside its
+    // blur zone unless there's more scrollable room below it than that.
+    <section id="contact" className="bg-bg pb-44 pt-20 md:pb-56 md:pt-28">
       <Container>
-        <Reveal className="max-w-2xl">
-          <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-5xl">
-            Open to Flutter and mobile engineering roles.
-          </h2>
-          <p className="mt-5 text-[16px] leading-relaxed text-white/85 md:text-lg">
-            If you are hiring, or just want to talk about on-device ML or
-            audio pipelines, my inbox is open.
-          </p>
+        <ElasticDivider />
 
-          <div className="mt-9">
-            <a
-              href={`mailto:${profile.email}`}
-              className="inline-flex items-center gap-2 rounded-full bg-white py-3 pl-6 pr-2 text-[15px] font-medium text-[#15171b] transition-transform duration-300 active:scale-[0.98]"
-            >
-              <span>Email me</span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/[0.06]">
-                <EnvelopeSimple size={16} weight="bold" />
-              </span>
-            </a>
+        <Reveal className="flex flex-col gap-10 pt-10 md:flex-row md:items-start md:justify-between">
+          <div>
+            <span className="text-[15px] text-fg-faint">Got a project in mind?</span>
+            <h2 className="mt-2 text-4xl font-extrabold tracking-tight text-fg md:text-5xl">
+              Let&apos;s Talk
+            </h2>
+          </div>
+
+          <div className="flex gap-14 md:gap-20">
+            <div className="flex flex-col gap-3">
+              <FooterLink href={profile.github} label="GitHub" />
+              <FooterLink href={`mailto:${profile.email}`} label={profile.email} external={false} />
+            </div>
+            <div className="flex flex-col gap-3">
+              <FooterLink href={profile.linkedin} label="LinkedIn" />
+              <FooterLink href={profile.resume} label="Resume" />
+              {/* Instagram omitted until a real handle exists — see content.ts */}
+              {profile.instagram && <FooterLink href={profile.instagram} label="Instagram" />}
+            </div>
           </div>
         </Reveal>
+
+        <p className="mt-16 flex items-center justify-center gap-1.5 text-center text-[13px] text-fg-faint">
+          © {new Date().getFullYear()} · Made with <Heart size={13} weight="fill" className="text-accent" /> by{" "}
+          <span className="font-semibold text-accent">{profile.name}</span>
+        </p>
       </Container>
-
-      <div className="mt-20 border-t border-white/20">
-        <Container className="flex flex-col items-start justify-between gap-6 py-8 md:flex-row md:items-center">
-          <p className="text-[14px] text-white/70">
-            {profile.name} · {new Date().getFullYear()}
-          </p>
-
-          <div className="flex flex-wrap items-center gap-x-7 gap-y-3 text-[14px]">
-            <a
-              href={`mailto:${profile.email}`}
-              className="flex items-center gap-2 text-white/85 transition-colors hover:text-white"
-            >
-              <EnvelopeSimple size={16} />
-              {profile.email}
-            </a>
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-white/85 transition-colors hover:text-white"
-            >
-              <LinkedinLogo size={16} />
-              LinkedIn
-            </a>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-white/85 transition-colors hover:text-white"
-            >
-              <GithubLogo size={16} />
-              GitHub
-            </a>
-          </div>
-        </Container>
-      </div>
     </section>
   );
 }
