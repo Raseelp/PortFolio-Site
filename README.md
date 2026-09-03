@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Muhammed Raseel P — Portfolio
 
-## Getting Started
+Personal portfolio site for [Muhammed Raseel P](https://github.com/Raseelp), a Flutter developer. Built with Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS v4.
 
-First, run the development server:
+It's a single-page site, but not a static brochure — the hero background is an interactive canvas with real pointer physics, a fully playable hidden Snake game, and a small generative sound system, alongside the usual portfolio sections (experience, tech stack, projects, education, contact).
+
+## Features
+
+- **Interactive hero** — a canvas widget-grid background scattered with real tech-brand icons that repel from the cursor, plus a hidden, fully playable **Snake game** (arrow keys / WASD / swipe / on-screen D-pad on mobile), complete with festival-themed win/lose moments and a snake-vs-text letter collider on the rotating hero tagline
+- **Sound design** — synthesized SFX and generative background music (calm/energetic modes tied to the game), plus a licensed ambient bed, all behind an explicit mute toggle (off by default)
+- **Tech stack explorer** — a flow/browse toggle view of the stack, each icon a real Simple Icons brand mark in its real brand color
+- **Selected Works** — project cards with a pointer-driven 3D tilt, a varied stats grid, and technical stack tags
+- **Real content only** — no filler copy, no fabricated metrics; experience, projects, and stats all come from `src/lib/content.ts`
+
+## Tech stack
+
+Next.js 16 · React 19 · TypeScript · Tailwind CSS v4 · Motion (`motion/react`) · Phosphor Icons · Lenis (smooth scroll)
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # production build
+npm run lint    # ESLint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
 
-## Learn More
+```
+src/
+  app/            # routes, metadata, favicon/OG-image/robots/sitemap
+  components/     # page sections and UI components
+  lib/            # content data, sound/music engines, shared hooks
+```
 
-To learn more about Next.js, take a look at the following resources:
+All real content (profile, experience, projects, skills, education) lives in `src/lib/content.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+© Muhammed Raseel P. Source available for reference; not licensed for reuse.
