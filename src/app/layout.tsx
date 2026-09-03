@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { GradualBlur } from "@/components/ui/GradualBlur";
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <GradualBlur />
         <GrainOverlay />
+        <Analytics />
       </body>
     </html>
   );
