@@ -1,9 +1,18 @@
+import fs from "node:fs";
+import path from "node:path";
 import { Button } from "./ui/Button";
 import { Container } from "./ui/Container";
 import { HeroGlow } from "./HeroGlow";
+import { ResumeTicket } from "./ui/ResumeTicket";
 import { heroCopy, aboutCopy, profile } from "@/lib/content";
 
 const STAT_COLORS = ["var(--accent-gold-deep)", "var(--accent-sky-deep)", "var(--accent-deep)"];
+
+// Read at build time (this is a static page) so the size shown is always
+// the real file's, never a hand-typed number that goes stale the next time
+// the resume is swapped.
+const resumeBytes = fs.statSync(path.join(process.cwd(), "public", "resume.pdf")).size;
+const resumeSizeLabel = `${Math.round(resumeBytes / 1024)} KB`;
 
 export function Hero() {
   return (
@@ -31,6 +40,8 @@ export function Hero() {
                 Contact
               </Button>
             </div>
+
+            <ResumeTicket href={profile.resume} sizeLabel={resumeSizeLabel} />
           </div>
 
           <div className="mt-20 grid grid-cols-1 gap-10 border-t border-border pt-10 md:grid-cols-12 md:gap-8">
