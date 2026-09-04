@@ -25,8 +25,28 @@ export function usePointerPhysics(
     if (!enabled || !el) return;
     const sign = mode === "attract" ? 1 : -1;
 
+    // Every instance of this hook used to call getBoundingClientRect() (a
+    // forced synchronous layout read) on every single pointermove — and
+    // there's one instance per rendered tech icon, so a screen with a few
+    // dozen icons meant a few dozen forced layout reads per pointer event,
+    // including during a touch-scroll on mobile. The element's position
+    // only actually changes on scroll or resize, so the rect is cached and
+    // only recomputed then — pointermove still updates the pull every
+    // frame exactly as before, just against a rect that isn't needlessly
+    // re-measured when nothing has moved.
+    let rect = (el as Element).getBoundingClientRect();
+    let dirty = false;
+    function markDirty() {
+      dirty = true;
+    }
+    window.addEventListener("scroll", markDirty, { passive: true, capture: true });
+    window.addEventListener("resize", markDirty);
+
     function onMove(e: PointerEvent) {
-      const rect = (el as Element).getBoundingClientRect();
+      if (dirty) {
+        rect = (el as Element).getBoundingClientRect();
+        dirty = false;
+      }
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dx = (e.clientX - cx) * sign;
@@ -45,6 +65,8 @@ export function usePointerPhysics(
     window.addEventListener("pointermove", onMove);
     return () => {
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("scroll", markDirty, true);
+      window.removeEventListener("resize", markDirty);
       (el as HTMLElement).style.transform = "";
     };
   }, [ref, enabled, mode, radius, strength]);

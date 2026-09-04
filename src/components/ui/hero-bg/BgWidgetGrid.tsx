@@ -211,26 +211,45 @@ export function BgWidgetGrid({
       gameRef.current?.setDirection(dir);
     });
 
-    // CSS-pixel size of the canvas — every existing CELL/GAP pixel
+    // CSS-pixel size of the canvas — every existing cell/GAP pixel
     // calculation below stays in these units regardless of device pixel
     // ratio; only the backing store and one ctx.setTransform below need to
     // know about `dpr`.
     let cssW = 0;
     let cssH = 0;
+    // Responsive cell size — the fixed 46px square read as oversized on a
+    // narrow phone screen (proportionally much bigger than on desktop).
+    // Dropping it a bit below the two smaller breakpoints keeps the same
+    // grid language without it dominating the viewport.
+    let cell = CELL;
+    // Icon-tile layout cache — rebuilt in the draw loop only when the
+    // column/row count changes. Invalidated (cachedCols reset to -1) on
+    // every resize too, including a cell-size change with no change in
+    // column count.
+    let cachedCols = -1;
+    let cachedRows = -1;
+    let cachedTiles: { key: string; cellCx: number; cellCy: number; slug: TechIconSlug; isHint: boolean }[] = [];
 
     function resize() {
       if (!canvas || !ctx) return;
       const parent = canvas.parentElement;
       cssW = parent?.clientWidth ?? window.innerWidth;
       cssH = parent?.clientHeight ?? window.innerHeight;
-      const dpr = window.devicePixelRatio || 1;
+      cell = cssW < 480 ? 38 : cssW < 768 ? 42 : CELL;
+      // Capped at 2x rather than the device's real ratio (often 3x on
+      // Android) — a background canvas doesn't need more than retina
+      // sharpness, and fill-rate cost scales with the square of this
+      // number, so capping it is one of the cheapest wins against jank on
+      // high-DPI phones.
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(cssW * dpr);
       canvas.height = Math.round(cssH * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       iconPhysicsRef.current.clear();
+      cachedCols = -1;
       // The sound/snake toggle buttons sit fixed near the top of the
       // screen; keep food from spawning where they'd hide it.
-      game.topSafeRows = Math.ceil(TOP_SAFE_PX / (CELL + GAP));
+      game.topSafeRows = Math.ceil(TOP_SAFE_PX / (cell + GAP));
     }
     resize();
     // ResizeObserver catches everything a plain window "resize" listener
@@ -241,9 +260,10 @@ export function BgWidgetGrid({
     // "snake goes out of bounds on mobile" bug: the canvas's backing store
     // stayed sized for a stale viewport while its CSS box had already
     // changed, so the coordinate math and the visible area disagreed.)
+    // It's a strict superset of a plain window resize listener, so there's
+    // no separate one registered here.
     const ro = new ResizeObserver(resize);
     if (canvas.parentElement) ro.observe(canvas.parentElement);
-    window.addEventListener("resize", resize);
 
     // Keyboard control — only steers while the game is actually running
     // (the Snake toggle button is what starts it now, not a keypress) and
@@ -289,8 +309,17 @@ export function BgWidgetGrid({
       const h = cssH;
       ctx.clearRect(0, 0, w, h);
 
-      const cols = Math.ceil(w / (CELL + GAP)) + 1;
-      const rows = Math.ceil(h / (CELL + GAP)) + 1;
+      // Ambient background tiles are allowed to overshoot the canvas edge
+      // (the canvas clips it for free) so the wave pattern still tiles
+      // edge-to-edge. Snake's own playable area is deliberately smaller —
+      // only columns/rows that are FULLY on-screen — so food or the snake
+      // itself can never land in a sliver of a column that's mostly (or
+      // entirely) off-canvas, which is what let it seem to "vanish" near
+      // the edges on a narrow screen.
+      const cols = Math.ceil(w / (cell + GAP));
+      const rows = Math.ceil(h / (cell + GAP));
+      const gameCols = Math.max(1, Math.floor(w / (cell + GAP)));
+      const gameRows = Math.max(1, Math.floor(h / (cell + GAP)));
       const time = t * 0.001;
       const dt = Math.min(0.05, time - lastFrameTime || 0);
       lastFrameTime = time;
@@ -302,11 +331,11 @@ export function BgWidgetGrid({
       // Keep the grid dimensions in sync even while inactive, so food/body
       // positions are already correct the instant the toggle starts a run
       // instead of snapping into place on the first frame after.
-      game.resize(cols, rows);
+      game.resize(gameCols, gameRows);
       if (active) {
         game.setCursor(
-          strength > 0.1 ? Math.floor(mx / (CELL + GAP)) : null,
-          strength > 0.1 ? Math.floor(my / (CELL + GAP)) : null
+          strength > 0.1 ? Math.floor(mx / (cell + GAP)) : null,
+          strength > 0.1 ? Math.floor(my / (cell + GAP)) : null
         );
         game.tick(dt * 1000);
         // Segment centers in the same canvas-local pixel space the hero
@@ -315,13 +344,13 @@ export function BgWidgetGrid({
         // top of it.
         reportSnakeSegments(
           game.body.map((seg) => ({
-            x: seg.col * (CELL + GAP) + CELL / 2,
-            y: seg.row * (CELL + GAP) + CELL / 2,
+            x: seg.col * (cell + GAP) + cell / 2,
+            y: seg.row * (cell + GAP) + cell / 2,
           }))
         );
         for (const burst of game.drainBursts()) {
-          const bx = burst.col * (CELL + GAP) + CELL / 2;
-          const by = burst.row * (CELL + GAP) + CELL / 2;
+          const bx = burst.col * (cell + GAP) + cell / 2;
+          const by = burst.row * (cell + GAP) + cell / 2;
           eatPopsRef.current.push({
             x: bx,
             y: by,
@@ -362,26 +391,35 @@ export function BgWidgetGrid({
       const waveFront = clickAge * RING_SPEED;
       reportRipple(currentClick > 0.01 ? { cx, cy, waveFront, ringWidth: RING_WIDTH, strength: currentClick } : null);
 
-      // Collect this frame's icon tiles — position is deterministic from
-      // the grid; only the physics offset moves.
-      const iconTiles: { key: string; cellCx: number; cellCy: number; slug: TechIconSlug; isHint: boolean }[] = [];
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const sel = hash(col, row);
-          if (sel >= 0.07) continue;
-          const cellCx = col * (CELL + GAP) + CELL / 2;
-          const cellCy = row * (CELL + GAP) + CELL / 2;
-          const slug = ICON_SLUGS[Math.floor(hash(col, row + 100) * ICON_SLUGS.length)];
-          const key = `${col},${row}`;
-          // A rare handful of "icon" tiles quietly show a small directional
-          // cluster instead of a tech mark — never labeled, never called
-          // out, just something a curious eye might notice looks like
-          // arrows and try pressing some.
-          const isHint = hash(col, row + 300) < 0.02;
-          iconTiles.push({ key, cellCx, cellCy, slug, isHint });
-          if (!iconPhysicsRef.current.has(key)) iconPhysicsRef.current.set(key, { ox: 0, oy: 0, vx: 0, vy: 0 });
+      // Icon tiles are deterministic from (col, row) alone — the same grid
+      // shape always picks the same cells — so the full hash-and-allocate
+      // pass only needs to run when the column/row count actually changes
+      // (a resize), not on every one of the ~60 frames a second this draw
+      // loop runs. Only each tile's physics offset moves frame to frame,
+      // and that already lives in iconPhysicsRef, untouched by this cache.
+      if (cachedCols !== cols || cachedRows !== rows) {
+        cachedCols = cols;
+        cachedRows = rows;
+        cachedTiles = [];
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const sel = hash(col, row);
+            if (sel >= 0.07) continue;
+            const cellCx = col * (cell + GAP) + cell / 2;
+            const cellCy = row * (cell + GAP) + cell / 2;
+            const slug = ICON_SLUGS[Math.floor(hash(col, row + 100) * ICON_SLUGS.length)];
+            const key = `${col},${row}`;
+            // A rare handful of "icon" tiles quietly show a small directional
+            // cluster instead of a tech mark — never labeled, never called
+            // out, just something a curious eye might notice looks like
+            // arrows and try pressing some.
+            const isHint = hash(col, row + 300) < 0.02;
+            cachedTiles.push({ key, cellCx, cellCy, slug, isHint });
+            if (!iconPhysicsRef.current.has(key)) iconPhysicsRef.current.set(key, { ox: 0, oy: 0, vx: 0, vy: 0 });
+          }
         }
       }
+      const iconTiles = cachedTiles;
 
       if (justClicked) {
         playSplash();
@@ -462,10 +500,10 @@ export function BgWidgetGrid({
       // Base tiles: ambient wave + cursor glow, always in the signature accent.
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
-          const x = col * (CELL + GAP);
-          const y = row * (CELL + GAP);
-          const cellCx = x + CELL / 2;
-          const cellCy = y + CELL / 2;
+          const x = col * (cell + GAP);
+          const y = row * (cell + GAP);
+          const cellCx = x + cell / 2;
+          const cellCy = y + cell / 2;
 
           const wave = Math.sin(col * 0.4 + row * 0.3 - time * 1.4) * 0.5 + 0.5;
           let brightness = 0.06 + wave * 0.1;
@@ -475,7 +513,7 @@ export function BgWidgetGrid({
 
           const lift = Math.max(0, 1 - distToMouse / 160) * strength * 3;
           ctx.fillStyle = `rgba(${accentRgb}, ${brightness})`;
-          ctx.fillRect(x, y - lift, CELL, CELL);
+          ctx.fillRect(x, y - lift, cell, cell);
 
           // The ripple itself — drawn as a separate colored layer on top,
           // so only the ring's own band takes the poisoned color while the
@@ -486,21 +524,22 @@ export function BgWidgetGrid({
             const rippleBrightness = Math.max(0, 1 - ringDist / 60) * 0.9 * currentClick;
             if (rippleBrightness > 0.01) {
               ctx.fillStyle = `rgba(${rippleRgb}, ${rippleBrightness})`;
-              ctx.fillRect(x, y - lift, CELL, CELL);
+              ctx.fillRect(x, y - lift, cell, cell);
             }
           }
         }
       }
 
       // Icons, in a separate pass so a flung icon can visually cross into
-      // a neighboring tile instead of being clipped by it.
+      // a neighboring tile instead of being clipped by it. Scaled with
+      // `cell` so the icon-to-tile ratio stays the same at every breakpoint.
+      const iconSize = Math.round(cell * (18 / CELL));
       for (const tile of iconTiles) {
         const phys = iconPhysicsRef.current.get(tile.key)!;
         const dist = Math.hypot(tile.cellCx - cx, tile.cellCy - cy);
         const ringDist = Math.abs(dist - waveFront);
         const poison = currentClick > 0.01 ? Math.max(0, 1 - ringDist / RING_WIDTH) * currentClick : 0;
 
-        const iconSize = 18;
         ctx.save();
         ctx.translate(tile.cellCx + phys.ox - iconSize / 2, tile.cellCy + phys.oy - iconSize / 2);
         ctx.scale(iconSize / 24, iconSize / 24);
@@ -521,6 +560,14 @@ export function BgWidgetGrid({
       }
 
       const particles = particlesRef.current;
+      // A burst of rapid clicks/eats could otherwise pile up an unbounded
+      // number of live particles — each with its own shadowBlur draw call —
+      // which is exactly the kind of thing that turns into a real hang on a
+      // weaker device. Trimming the oldest ones keeps normal play (a click,
+      // an eat) completely unaffected; it only ever engages under
+      // pathologically rapid-fire input.
+      const MAX_PARTICLES = 400;
+      if (particles.length > MAX_PARTICLES) particles.splice(0, particles.length - MAX_PARTICLES);
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx;
@@ -585,14 +632,13 @@ export function BgWidgetGrid({
         }
       }
 
-      if (active) game.draw(ctx, iconPaths, CELL, GAP, time);
+      if (active) game.draw(ctx, iconPaths, cell, GAP, time);
     };
     raf = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      window.removeEventListener("resize", resize);
       window.removeEventListener("keydown", handleKeyDown);
       canvas.removeEventListener("pointerdown", handlePointerDown);
       canvas.removeEventListener("pointerup", handlePointerUp);
