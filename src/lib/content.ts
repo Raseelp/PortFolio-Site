@@ -66,18 +66,33 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    name: "Local Embedding-Based Media Retrieval Engine",
+    name: "Lost & Found",
     tagline:
-      "Search your own photos, videos and PDFs by what's actually in them, with nothing leaving the device.",
+      "Find any photo or video by describing it, or by who is in it, with nothing leaving the phone.",
     description:
-      "An offline semantic search system for local images, videos, and PDFs. CLIP's vision and text encoders map both into one embedding space, so a natural-language query matches what's actually depicted or written inside a file, not its filename, entirely on-device.",
+      "An open-source Android app that searches your photos and videos by what's in them (\"a birthday cake with candles\") and recognises the people in them, entirely on-device. Apple's MobileCLIP-S0 powers the search, SCRFD and MobileFaceNet find and group faces, and the two work together, so \"Maya at the beach\" finds photos with Maya ranked by the scene. It also builds a timeline of everyone's photos, On this day, and daily memories.",
     date: "December 2025",
-    stack: ["CLIP", "Flutter", "Kotlin", "MethodChannels", "UMAP", "Three.js", "On-device inference"],
+    stack: ["Flutter", "Kotlin", "ONNX Runtime", "MobileCLIP-S0", "SCRFD", "MobileFaceNet", "SQLite", "MethodChannels"],
     stats: [
-      "100% on-device, zero cloud calls",
-      "512-dim embeddings reduced to 3D via UMAP",
-      "Flutter + Kotlin + Three.js bridge",
-      "Cosine similarity ranking over local vectors",
+      "100% on-device, no cloud and no account",
+      "Search model cut from 606 MB to 104 MB",
+      "App size cut 67%, from 398 MB to 131 MB",
+      "Faces grouped automatically, tested on 4,400+ faces",
+    ],
+    previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
+  },
+  {
+    name: "iPhone Video to Android Converter",
+    tagline: "Fixes iPhone videos that won't play on Android, in one tap.",
+    description:
+      "iPhones record in HEVC, often with HDR or Dolby Vision, and many Android phones show those videos as a black screen. This native app re-encodes them to H.264 in the background, tone-maps HDR to standard colour so nothing looks washed out, and keeps the audio untouched. When Android's built-in tools fail on real Dolby Vision footage, a chain of fallbacks ends in a custom FFmpeg pipeline.",
+    date: "September 2026",
+    stack: ["Kotlin", "Jetpack Compose", "Media3", "FFmpeg", "MediaCodec"],
+    stats: [
+      "One-tap HEVC to H.264, in the background",
+      "HDR and Dolby Vision tone-mapped to SDR",
+      "Multi-step fallback across video engines",
+      "Output fitted to what each phone's encoder can produce",
     ],
     previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
   },
