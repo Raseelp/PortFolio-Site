@@ -54,7 +54,7 @@ function StackTag({ tech }: { tech: string }) {
 
 export function PhoneCards({ projects }: { projects: Project[] }) {
   return (
-    <RevealGroup className="flex flex-col gap-10">
+    <RevealGroup className="flex flex-col gap-10" amount="some">
       {projects.map((project, i) => {
         const glow = GLOWS[i % GLOWS.length];
         return (

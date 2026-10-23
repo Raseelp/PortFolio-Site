@@ -46,16 +46,20 @@ interface RevealGroupProps {
   children: ReactNode;
   className?: string;
   stagger?: number;
+  /** How much of the group must be on screen before it reveals. A tall group
+   * (several stacked cards on a phone) can be far taller than the screen, so
+   * a fraction like 0.2 may never be reachable; pass "some" for those. */
+  amount?: number | "some" | "all";
 }
 
 /** Parent for staggered children. Pair with <RevealItem> inside. */
-export function RevealGroup({ children, className, stagger = 0.08 }: RevealGroupProps) {
+export function RevealGroup({ children, className, stagger = 0.08, amount = 0.2 }: RevealGroupProps) {
   const reduce = useReducedMotion();
   return (
     <motion.div
       initial={reduce ? false : "hidden"}
       whileInView="show"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount }}
       variants={{
         hidden: {},
         show: { transition: { staggerChildren: stagger } },
