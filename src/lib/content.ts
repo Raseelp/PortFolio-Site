@@ -62,6 +62,8 @@ export interface Project {
   /** Stand-in footage only (free-licensed stock, not the real app) until
    * actual screen recordings replace it — see ProjectMedia.tsx. */
   previewVideo: string;
+  /** The project's public GitHub repo, linked from the card's GitHub pill. */
+  repo?: string;
 }
 
 export const projects: Project[] = [
@@ -80,6 +82,7 @@ export const projects: Project[] = [
       "Faces grouped automatically, tested on 4,400+ faces",
     ],
     previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
+    repo: "https://github.com/Raseelp/Lost-and-Found-Offline-Search",
   },
   {
     name: "iPhone Video to Android Converter",
@@ -95,6 +98,7 @@ export const projects: Project[] = [
       "Output fitted to what each phone's encoder can produce",
     ],
     previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
+    repo: "https://github.com/Raseelp/iPhone-Video-to-Android-Converter",
   },
   {
     name: "Context-Aware Notification Assistant",
@@ -110,6 +114,7 @@ export const projects: Project[] = [
       "Customizable home-screen widget",
     ],
     previewVideo: "https://videos.pexels.com/video-files/7822022/7822022-sd_360_640_30fps.mp4",
+    repo: "https://github.com/Raseelp/NotifierTTS-Native",
   },
 ];
 

@@ -122,7 +122,7 @@ export function PhoneCards({ projects }: { projects: Project[] }) {
                         {project.tagline}
                       </p>
                     </div>
-                    <ProjectLinkButtons />
+                    <ProjectLinkButtons repo={project.repo} />
                   </div>
 
                   <p className="relative mt-5 max-w-[60ch] text-[14.5px] leading-relaxed text-fg-muted">
