@@ -35,6 +35,14 @@ function wrapDelta(d: number, size: number): number {
   return d;
 }
 
+/** Path for a rounded square (an app-icon "squircle") centered on (cx, cy)
+ * with half-width `half`; falls back to a circle where roundRect is missing. */
+function squircle(ctx: CanvasRenderingContext2D, cx: number, cy: number, half: number) {
+  ctx.beginPath();
+  if (typeof ctx.roundRect === "function") ctx.roundRect(cx - half, cy - half, half * 2, half * 2, half * 0.55);
+  else ctx.arc(cx, cy, half, 0, Math.PI * 2);
+}
+
 /**
  * Snake, played out on the hero's own widget grid. Not a separate overlay —
  * it moves on the exact same CELL/GAP cells the ambient tiles already use.
@@ -268,23 +276,31 @@ export class SnakeGame {
       const [fx, fy] = toXY(this.food.col, this.food.row);
       const color = TECH_BRAND_COLORS[this.food.slug] ?? "#ffffff";
       const pulse = Math.sin(time * 5) * 0.5 + 0.5; // 0..1
-      const ringRadius = 14 + pulse * 8;
+      const ringRadius = 19 + pulse * 9;
 
+      // A white ring that breathes out from the badge...
       ctx.save();
-      ctx.beginPath();
-      ctx.arc(fx, fy, ringRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = color;
-      ctx.globalAlpha = 0.5 - pulse * 0.3;
-      ctx.lineWidth = 2;
+      squircle(ctx, fx, fy, ringRadius);
+      ctx.strokeStyle = "#ffffff";
+      ctx.globalAlpha = 0.85 - pulse * 0.55;
+      ctx.lineWidth = 3;
       ctx.stroke();
       ctx.restore();
 
-      const size = 20 + pulse * 3;
+      // ...around a white app-icon squircle holding the real brand icon.
+      const size = 18 + pulse * 2;
+      ctx.save();
+      ctx.shadowColor = "rgba(10, 20, 120, 0.4)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetY = 3;
+      squircle(ctx, fx, fy, 16 + pulse * 1.5);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.restore();
+
       ctx.save();
       ctx.translate(fx - size / 2, fy - size / 2);
       ctx.scale(size / 24, size / 24);
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 20 + pulse * 10;
       ctx.fillStyle = color;
       ctx.fill(iconPaths[this.food.slug]);
       ctx.restore();
@@ -300,11 +316,10 @@ export class SnakeGame {
       const [ax, ay] = toXY(a.col, a.row);
       const [bx, by] = toXY(b.col, b.row);
       if (Math.hypot(bx - ax, by - ay) > cell + gap + 4) continue; // wrapped across an edge — don't draw a line across the whole grid
-      const color = TECH_BRAND_COLORS[a.slug ?? (b.slug as TechIconSlug)] ?? "#ffffff";
       ctx.save();
-      ctx.strokeStyle = color;
-      ctx.globalAlpha = 0.35;
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#ffffff";
+      ctx.globalAlpha = 0.6;
+      ctx.lineWidth = 5;
       ctx.lineCap = "round";
       ctx.beginPath();
       ctx.moveTo(ax, ay);
@@ -322,20 +337,40 @@ export class SnakeGame {
       const isHead = i === 0;
       const [sx, sy] = toXY(seg.col, seg.row);
       const wave = 1 + Math.sin(time * 5 - i * 0.7) * 0.1;
-      const size = (isHead ? 21 : 16) * wave;
+      const size = (isHead ? 19 : 15) * wave;
+      const badge = (isHead ? 17 : 13.5) * wave;
+
+      // Every segment is a white squircle (the head a little larger and
+      // with a soft drop shadow, the body with a hairline blue edge so it
+      // doesn't bloom into a blur on a long snake) holding its real icon.
+      ctx.save();
+      if (isHead) {
+        ctx.shadowColor = "rgba(10, 20, 120, 0.4)";
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 3;
+      }
+      squircle(ctx, sx, sy, badge);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.restore();
+      if (!isHead) {
+        ctx.save();
+        squircle(ctx, sx, sy, badge);
+        ctx.strokeStyle = "rgba(20, 30, 140, 0.2)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
 
       ctx.save();
       if (seg.slug) {
-        const color = TECH_BRAND_COLORS[seg.slug] ?? "#ffffff";
         ctx.translate(sx - size / 2, sy - size / 2);
         ctx.scale(size / 24, size / 24);
-        ctx.shadowColor = color;
-        ctx.shadowBlur = isHead ? 12 : 4;
-        ctx.fillStyle = color;
+        ctx.fillStyle = TECH_BRAND_COLORS[seg.slug] ?? "#0f1030";
         ctx.fill(iconPaths[seg.slug]);
       } else {
         ctx.beginPath();
-        ctx.fillStyle = isHead ? "rgba(255,255,255,0.5)" : "rgba(255,255,255,0.28)";
+        ctx.fillStyle = "rgba(15, 16, 48, 0.35)";
         ctx.arc(sx, sy, size * 0.24, 0, Math.PI * 2);
         ctx.fill();
       }

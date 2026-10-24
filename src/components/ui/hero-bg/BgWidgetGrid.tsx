@@ -17,10 +17,10 @@ import { reportRipple, reportSnakeSegments } from "@/lib/heroDisturbance";
 const CELL = 46;
 const GAP = 6;
 const ICON_SLUGS = ["dart", "flutter", "kotlin", "android", "getx", "git", "firebase", "figma"] as const;
-// The sound/snake toggle buttons occupy roughly this many pixels near the
-// top of the screen on every viewport size — see snakeGame.ts's
+// The panel now sits inside the page (the toggles dock bottom-right, outside
+// it), so no rows need keeping clear of food — see snakeGame.ts's
 // `topSafeRows`.
-const TOP_SAFE_PX = 80;
+const TOP_SAFE_PX = 0;
 
 // Ripple/shockwave tuning. The ring expands at RING_SPEED px/s; an icon
 // only feels a push (and only "poisons" with the clicked icon's brand
@@ -155,18 +155,17 @@ export function BgWidgetGrid({
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    const style = getComputedStyle(document.documentElement);
-    const accent = style.getPropertyValue("--accent").trim() || "#1fbcfd";
+    // The grid is drawn on the blue panel: tiles and the cursor glow are
+    // white at low alpha (so they read as lighter squares of the same
+    // blue) and the ambient icons are white. Brand colors only appear when
+    // something interacts: a click ripple "poisoned" by an icon, or the
+    // snake. Plain hex because a canvas fillStyle can't read a CSS var().
+    const accent = "#ffffff";
     const accentRgb = hexToRgb(accent);
-    // A brighter mixed palette for Snake's "festival" eat burst — resolved
-    // once here since a canvas fillStyle can't read a CSS var() directly.
-    const festivalColors = [
-      accent,
-      style.getPropertyValue("--accent-warm").trim() || "#9880ff",
-      style.getPropertyValue("--accent-gold").trim() || "#ffb238",
-      style.getPropertyValue("--accent-pink").trim() || "#ff6ba8",
-      style.getPropertyValue("--accent-sky").trim() || "#6c8cff",
-    ];
+    const inkRgb = accentRgb;
+    const iconFill = "rgba(255, 255, 255, 0.8)";
+    // A bright mixed palette for Snake's "festival" eat burst.
+    const festivalColors = ["#ffffff", "#ffe14d", "#ff7ab0", "#8fb4ff", "#ffa94d"];
     // Snake's food order (see snakeGame.ts) draws from this same icon set,
     // so no extra paths need loading for it.
     const iconPaths: Record<string, Path2D> = {};
@@ -497,7 +496,20 @@ export function BgWidgetGrid({
         }
       }
 
-      // Base tiles: ambient wave + cursor glow, always in the signature accent.
+      // Base tiles: ambient wave + cursor glow, white on the blue panel.
+      // Rounded squares (roundRect where the browser has it) to match the
+      // rounded panel they sit in.
+      const radius = Math.round(cell * 0.22);
+      const rounded = typeof ctx.roundRect === "function";
+      const fillTile = (x: number, y: number) => {
+        if (rounded) {
+          ctx.beginPath();
+          ctx.roundRect(x, y, cell, cell, radius);
+          ctx.fill();
+        } else {
+          ctx.fillRect(x, y, cell, cell);
+        }
+      };
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const x = col * (cell + GAP);
@@ -506,25 +518,27 @@ export function BgWidgetGrid({
           const cellCy = y + cell / 2;
 
           const wave = Math.sin(col * 0.4 + row * 0.3 - time * 1.4) * 0.5 + 0.5;
-          let brightness = 0.06 + wave * 0.1;
           const distToMouse = Math.hypot(cellCx - mx, cellCy - my);
-          brightness += Math.max(0, 1 - distToMouse / 160) * 0.5 * strength;
-          brightness = Math.min(1, brightness);
+          const glow = Math.max(0, 1 - distToMouse / 160) * strength;
 
-          const lift = Math.max(0, 1 - distToMouse / 160) * strength * 3;
-          ctx.fillStyle = `rgba(${accentRgb}, ${brightness})`;
-          ctx.fillRect(x, y - lift, cell, cell);
+          const lift = glow * 3;
+          ctx.fillStyle = `rgba(${inkRgb}, ${0.05 + wave * 0.07})`;
+          fillTile(x, y - lift);
+          if (glow > 0.02) {
+            ctx.fillStyle = `rgba(${accentRgb}, ${glow * 0.34})`;
+            fillTile(x, y - lift);
+          }
 
-          // The ripple itself — drawn as a separate colored layer on top,
-          // so only the ring's own band takes the poisoned color while the
-          // rest of the grid stays in the signature accent.
+          // The ripple itself: drawn as a separate colored layer on top, so
+          // only the ring's own band takes the poisoned color while the
+          // rest of the grid stays white-on-blue.
           if (currentClick > 0.01) {
             const distToClick = Math.hypot(cellCx - cx, cellCy - cy);
             const ringDist = Math.abs(distToClick - waveFront);
             const rippleBrightness = Math.max(0, 1 - ringDist / 60) * 0.9 * currentClick;
             if (rippleBrightness > 0.01) {
               ctx.fillStyle = `rgba(${rippleRgb}, ${rippleBrightness})`;
-              ctx.fillRect(x, y - lift, cell, cell);
+              fillTile(x, y - lift);
             }
           }
         }
@@ -549,7 +563,7 @@ export function BgWidgetGrid({
           ctx.fillStyle = rippleColorRef.current;
           ctx.globalAlpha = 0.55 + poison * 0.45;
         } else {
-          ctx.fillStyle = "rgba(255,255,255,0.55)";
+          ctx.fillStyle = iconFill;
         }
         if (tile.isHint) {
           drawDirectionalHint(ctx);

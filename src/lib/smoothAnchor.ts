@@ -12,13 +12,15 @@ export function setLenisInstance(instance: Lenis | null) {
   lenisInstance = instance;
 }
 
-export function smoothScrollToHash(hash: string) {
+/** `offset` is in px, negative to stop short of the target (e.g. to clear
+ * the fixed nav for a target that has no padding of its own above it). */
+export function smoothScrollToHash(hash: string, offset = 0) {
   const id = hash.startsWith("#") ? hash.slice(1) : hash;
   const el = document.getElementById(id);
   if (!el) return;
 
   if (lenisInstance) {
-    lenisInstance.scrollTo(el, { offset: 0 });
+    lenisInstance.scrollTo(el, { offset });
   } else {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }

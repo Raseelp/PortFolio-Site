@@ -16,14 +16,14 @@ export function TechChip({ label, size = "sm" }: { label: string; size?: "sm" | 
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center whitespace-nowrap ${lg ? "gap-3 px-4" : "gap-2 rounded-full border border-border-strong bg-bg-raised py-1.5 pl-1.5 pr-3.5"}`}
+      className={`inline-flex shrink-0 items-center whitespace-nowrap ${lg ? "gap-3 rounded-full bg-white py-2 pl-2 pr-6 shadow-[var(--shadow-card)] ring-1 ring-black/[0.04]" : "gap-2 rounded-full bg-bg-raised-2 py-1.5 pl-1.5 pr-3.5"}`}
     >
       {list.length > 0 && (
         <span
           className={
             lg
-              ? "flex h-9 w-9 items-center justify-center rounded-[10px]"
-              : "flex h-6 w-6 items-center justify-center rounded-full"
+              ? "flex h-10 w-10 items-center justify-center rounded-[13px]"
+              : "flex h-6 w-6 items-center justify-center rounded-[8px]"
           }
           style={{ background: badgeColor ?? "var(--bg-raised-2)" }}
         >
@@ -33,7 +33,7 @@ export function TechChip({ label, size = "sm" }: { label: string; size?: "sm" | 
         </span>
       )}
       <span
-        className={lg ? "text-[22px] font-semibold tracking-tight text-fg-muted" : "text-[13px] font-medium text-fg-muted"}
+        className={lg ? "text-[20px] font-semibold tracking-[-0.02em] text-fg" : "text-[13px] font-semibold text-fg"}
       >
         {label}
       </span>

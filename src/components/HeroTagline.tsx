@@ -27,15 +27,11 @@ const MOMENT_COPY: Record<Exclude<GameMoment, null>, { text: string }> = {
   gameover: { text: "GAME OVER" },
 };
 
-// The full accent set, not just one color per moment — a festival burst
-// cycles through all of it rather than staying monochrome.
-const FESTIVAL_COLORS = [
-  "var(--accent)",
-  "var(--accent-warm)",
-  "var(--accent-gold)",
-  "var(--accent-pink)",
-  "var(--accent-sky)",
-];
+// A bright palette that reads on the blue panel, not just one color per
+// moment: a festival burst cycles through all of it rather than staying
+// monochrome. Plain hex (not CSS vars) so the same list can build a
+// background-image gradient string.
+const FESTIVAL_COLORS = ["#ffffff", "#ffe14d", "#ff7ab0", "#8fb4ff", "#ffa94d"];
 const CONFETTI_COUNT = 70;
 
 interface Confetto {
@@ -88,7 +84,7 @@ export function HeroTagline({ tagline, quoteIndex, moment, reduceMotion, contain
   const confetti = useMemo(() => (moment && !reduceMotion ? buildConfetti() : []), [moment, reduceMotion]);
 
   return (
-    <div className="relative flex w-full max-w-2xl items-center justify-center">
+    <div className="relative flex w-full max-w-xl items-center justify-center">
       <AnimatePresence mode="wait">
         {moment ? (
           <motion.p
@@ -97,12 +93,12 @@ export function HeroTagline({ tagline, quoteIndex, moment, reduceMotion, contain
             animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: [0.3, 1.35, 1], y: 0 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.8 }}
             transition={reduceMotion ? { duration: 0.2 } : { duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className={`font-mono text-5xl font-black uppercase tracking-[0.16em] sm:text-6xl md:text-7xl ${
+            className={`font-display text-5xl font-extrabold uppercase tracking-[-0.02em] sm:text-6xl lg:text-7xl ${
               reduceMotion ? "" : "festival-text festival-text-animated"
             }`}
             style={
               reduceMotion
-                ? { color: "var(--accent)" }
+                ? { color: "#ffffff" }
                 : {
                     backgroundImage: `linear-gradient(90deg, ${FESTIVAL_COLORS.join(", ")}, ${FESTIVAL_COLORS[0]})`,
                   }
@@ -325,7 +321,7 @@ function CollidableTagline({
   let flatIndex = 0;
 
   return (
-    <p className="text-balance text-2xl font-bold leading-snug text-white sm:text-3xl md:text-4xl">
+    <p className="text-balance font-display text-[1.7rem] font-bold leading-[1.12] tracking-[-0.03em] text-white [text-shadow:0_2px_28px_rgba(10,20,120,0.35)] sm:text-4xl lg:text-[2.6rem] xl:text-5xl">
       {words.map((word, wi) => (
         <span key={wi}>
           <span style={{ display: "inline-block", whiteSpace: "nowrap" }}>

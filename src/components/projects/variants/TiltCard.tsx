@@ -27,7 +27,7 @@ export function TiltCard({ className, children }: { className?: string; children
 
   const shadowX = useTransform(rotateY, [-MAX_TILT, MAX_TILT], [-16, 16]);
   const shadowY = useTransform(rotateX, [-MAX_TILT, MAX_TILT], [16, -16]);
-  const boxShadow = useMotionTemplate`${shadowX}px ${shadowY}px 44px -14px rgba(0,0,0,0.55)`;
+  const boxShadow = useMotionTemplate`${shadowX}px ${shadowY}px 44px -14px rgba(0,0,0,0.14)`;
 
   function handlePointerMove(e: PointerEvent<HTMLDivElement>) {
     if (reduce) return;

@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { GradualBlur } from "@/components/ui/GradualBlur";
 import { CustomCursor } from "@/components/ui/CustomCursor";
-import { GrainOverlay } from "@/components/ui/GrainOverlay";
 import { SoundToggle } from "@/components/ui/SoundToggle";
 import { SnakeToggle } from "@/components/ui/SnakeToggle";
 import { siteUrl } from "@/lib/content";
+
+// Bricolage Grotesque for headings (a characterful, slightly quirky
+// grotesque) over Plus Jakarta Sans for body copy; both self-hosted by
+// next/font (no third-party stylesheet request).
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -39,23 +52,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistMono.variable} h-full antialiased`}>
-      {/* General Sans: the closest free match to the reference site's
-          Degular (a paid commercial face we're not licensed to embed). */}
-      <link rel="preconnect" href="https://api.fontshare.com" />
-      <link
-        rel="stylesheet"
-        href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700,800&display=swap"
-        precedence="default"
-      />
+    <html lang="en" className={`${bricolage.variable} ${jakarta.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-bg text-fg font-sans">
         <SmoothScroll />
         <CustomCursor />
         <SoundToggle />
         <SnakeToggle />
         {children}
-        <GradualBlur />
-        <GrainOverlay />
         <Analytics />
       </body>
     </html>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Container } from "./ui/Container";
 import { Reveal } from "./ui/Reveal";
+import { SectionHeading } from "./ui/SectionHeading";
 import { TechStackFlow } from "./tech-stack/TechStackFlow";
 import { TechStackViewToggle } from "./tech-stack/TechStackViewToggle";
 import { BrowseTree } from "./tech-stack/browse/BrowseTree";
@@ -18,17 +19,10 @@ export function TechStack() {
   const [view, setView] = useState<View>("flow");
 
   return (
-    <section id="stack" className="bg-bg py-20 md:py-28">
+    <section id="stack" className="py-16 md:py-24">
       <Container>
-        <Reveal className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent-deep">
-              Tech stack
-            </span>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-              What I build with
-            </h2>
-          </div>
+        <SectionHeading eyebrow="Stack" lead="What I" mark="build with" sub="And what I keep reaching for." />
+        <Reveal delay={0.1} className="mt-8 flex justify-start">
           <TechStackViewToggle view={view} onChange={setView} />
         </Reveal>
       </Container>

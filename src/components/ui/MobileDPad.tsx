@@ -31,7 +31,7 @@ function PadButton({ dir, className, children }: PadButtonProps) {
         requestSnakeDirection(dir);
       }}
       aria-label={`Move ${dir}`}
-      className={`liquid-glass flex h-11 w-11 items-center justify-center rounded-2xl text-fg/80 transition-colors active:text-accent ${className ?? ""}`}
+      className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-fg shadow-[0_6px_16px_-6px_rgba(10,20,120,0.45)] transition-transform active:scale-90 active:bg-bg-raised-2 ${className ?? ""}`}
     >
       {children}
     </button>
@@ -71,14 +71,9 @@ export function MobileDPad() {
   return (
     <div
       aria-hidden={false}
-      // z-50 — matches the fixed nav/toggle buttons' own top tier, and
-      // critically sits *above* GradualBlur's z-40 fixed scrim: that scrim
-      // covers the bottom 10rem of the whole viewport, which this D-pad's
-      // position otherwise falls inside, and backdrop-filter only samples
-      // what's painted behind it in stacking order — being above it is
-      // what keeps the pad crisp instead of hazed over right where it
-      // needs to be tapped precisely.
-      className="absolute bottom-10 left-1/2 z-50 grid -translate-x-1/2 grid-cols-3 grid-rows-3 gap-1.5 [touch-action:none]"
+      // Anchored to the bottom-left of the panel so it clears the docked
+      // sound/Snake buttons at the bottom-right of the screen.
+      className="absolute bottom-6 left-5 z-50 grid grid-cols-3 grid-rows-3 gap-1.5 [touch-action:none]"
     >
       <PadButton dir="up" className="col-start-2 row-start-1">
         <CaretUp size={18} weight="bold" />

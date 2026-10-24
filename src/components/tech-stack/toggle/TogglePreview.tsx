@@ -28,8 +28,8 @@ export function TogglePreview({ view, onChange }: { view: View; onChange: (v: Vi
         onClick={() => onChange("flow")}
         aria-pressed={flowActive}
         aria-label="Flow view"
-        className={`liquid-glass group flex h-10 w-10 items-center justify-center overflow-hidden rounded-full transition-colors ${
-          flowActive ? "text-accent" : "text-fg-muted hover:text-accent"
+        className={`group flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-[var(--shadow-card)] ring-1 ring-black/[0.05] transition-[color,transform] hover:-translate-y-0.5 active:scale-95 ${
+          flowActive ? "text-accent-deep ring-accent/60" : "text-fg-muted hover:text-fg"
         }`}
       >
         <span className="relative block h-3 w-6 overflow-hidden">
@@ -58,8 +58,8 @@ export function TogglePreview({ view, onChange }: { view: View; onChange: (v: Vi
         onClick={() => onChange("browse")}
         aria-pressed={browseActive}
         aria-label="Browse view"
-        className={`liquid-glass group flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
-          browseActive ? "text-accent" : "text-fg-muted hover:text-accent"
+        className={`group flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[var(--shadow-card)] ring-1 ring-black/[0.05] transition-[color,transform] hover:-translate-y-0.5 active:scale-95 ${
+          browseActive ? "text-accent-deep ring-accent/60" : "text-fg-muted hover:text-fg"
         }`}
       >
         <span className="grid grid-cols-2 gap-[3px]">

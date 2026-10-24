@@ -26,9 +26,8 @@ interface TimelineEntryProps {
 
 /**
  * One dated stop on a Timeline. Shared by Work Experience and Education per
- * design.md. Markers follow the reference site exactly: every past entry is
- * a solid light diamond, the single most-recent entry (first in the list)
- * is a pulsing lime diamond.
+ * the original spec. Every past entry is a solid ink diamond, the single
+ * most-recent entry (first in the list) is a pulsing blue one.
  */
 export function TimelineEntry({
   date,
@@ -60,11 +59,11 @@ export function TimelineEntry({
       </span>
       <div className="grid grid-cols-1 gap-2 md:grid-cols-12 md:gap-8">
         <div className="md:col-span-3">
-          <p className="text-[13px] italic text-fg-faint">{date}</p>
+          <p className="text-[13px] font-semibold text-fg-faint">{date}</p>
           {location && <p className="mt-1 text-[13px] text-fg-faint">{location}</p>}
         </div>
         <div className="md:col-span-9">
-          <h3 className="text-[17px] font-bold tracking-tight text-fg">{title}</h3>
+          <h3 className="font-display text-xl font-bold tracking-[-0.02em] text-fg">{title}</h3>
           <p className="mt-0.5 text-[14px] font-medium text-fg-muted">{org}</p>
           {children && <div className="mt-3">{children}</div>}
         </div>
@@ -77,7 +76,7 @@ export function TimelineEntry({
 /**
  * Wraps a run of <TimelineEntry>s with ONE continuous connecting line
  * (rather than a per-entry segment), so the reference site's signature
- * lime-to-white-to-transparent fade reads as a single unbroken gradient
+ * blue-to-grey-to-transparent fade reads as a single unbroken gradient
  * down the whole timeline.
  */
 export function Timeline({ children }: { children: ReactNode }) {
@@ -90,7 +89,7 @@ export function Timeline({ children }: { children: ReactNode }) {
         className="absolute bottom-6 left-[5px] top-1.5 w-px"
         style={{
           background:
-            "linear-gradient(180deg, var(--accent) 0%, var(--fg) 40%, var(--fg) 60%, var(--bg) 99%)",
+            "linear-gradient(180deg, var(--accent) 0%, rgba(40,40,40,0.55) 45%, rgba(40,40,40,0) 100%)",
         }}
       />
       <RevealGroup className="flex flex-col">

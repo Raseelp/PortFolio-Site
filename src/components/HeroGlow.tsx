@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { FocusEvent, PointerEvent } from "react";
 import { BgWidgetGrid } from "./ui/hero-bg/BgWidgetGrid";
 import { HeroTagline } from "./HeroTagline";
+import { InspectorOverlay } from "./ui/InspectorOverlay";
 import { MobileDPad } from "./ui/MobileDPad";
 import { heroQuotes } from "@/lib/content";
 
@@ -38,7 +39,7 @@ function pickQuoteIndex(exclude: number): number {
  * (see HeroTagline) before it settles back — a reward for finding the
  * game, never an announcement that it exists.
  */
-export function HeroGlow() {
+export function HeroGlow({ className = "" }: { className?: string }) {
   const mx = useMotionValue(50);
   const my = useMotionValue(50);
   const mouseActive = useMotionValue(0);
@@ -126,7 +127,8 @@ export function HeroGlow() {
   }
 
   return (
-    <section id="top" className="relative h-[100dvh] w-full bg-bg">
+    <div className={`insp-host relative ${className}`}>
+      <InspectorOverlay label="GamePanel" tagSide="right" />
       <div
         ref={panelRef}
         tabIndex={0}
@@ -136,7 +138,9 @@ export function HeroGlow() {
         onPointerDown={handlePointerDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className="absolute inset-3 isolate overflow-hidden rounded-[29px] border border-border bg-[#070c12] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+        // The rounded blue game panel, the right-hand half of the hero on
+        // desktop and stacked under the intro on small screens.
+        className="accent-panel relative isolate h-[clamp(420px,62dvh,640px)] w-full overflow-hidden rounded-[2rem] shadow-[var(--shadow-panel)] focus:outline-none focus-visible:ring-4 focus-visible:ring-accent/40 lg:h-[clamp(520px,74dvh,700px)] lg:rounded-[2.5rem]"
       >
         <div aria-hidden className="absolute inset-0 -z-20">
           <BgWidgetGrid
@@ -150,7 +154,7 @@ export function HeroGlow() {
           />
         </div>
 
-        <div className="relative z-10 flex h-full items-center justify-center p-8 text-center sm:p-14">
+        <div className="relative z-10 flex h-full items-center justify-center p-8 text-center sm:p-12">
           <HeroTagline
             tagline={heroQuotes[quoteIndex]}
             quoteIndex={quoteIndex}
@@ -162,6 +166,6 @@ export function HeroGlow() {
 
         <MobileDPad />
       </div>
-    </section>
+    </div>
   );
 }

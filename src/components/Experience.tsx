@@ -1,5 +1,7 @@
 import { Container } from "./ui/Container";
+import { InspectorOverlay } from "./ui/InspectorOverlay";
 import { Reveal } from "./ui/Reveal";
+import { SectionHeading } from "./ui/SectionHeading";
 import { Timeline, TimelineEntry } from "./ui/Timeline";
 import { TechIcon } from "./ui/TechIcon";
 import { experience } from "@/lib/content";
@@ -9,18 +11,12 @@ import { TECH_BRAND_COLORS } from "@/lib/techIcons";
 
 export function Experience() {
   return (
-    <section id="experience" className="bg-bg py-20 md:py-28">
+    <section id="experience" className="py-16 md:py-24">
       <Container>
-        <Reveal>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-            Work experience
-          </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-fg md:text-4xl">
-            Where I&apos;ve worked
-          </h2>
-        </Reveal>
+        <SectionHeading eyebrow="Experience" lead="Where I've" mark="worked" sub="And what I shipped there." />
 
-        <div className="mt-14">
+        <Reveal delay={0.1} className="insp-host relative mt-12 rounded-[2rem] bg-white p-6 shadow-[var(--shadow-card)] md:mt-16 md:rounded-[2.5rem] md:p-12">
+          <InspectorOverlay label="Timeline" tagSide="right" />
           <Timeline>
             {experience.map((entry) => {
               const groups: AchievementGroup[] = entry.subEntries
@@ -53,7 +49,7 @@ export function Experience() {
                   {(isCurrent || stack.length > 0) && (
                     <div className="flex flex-wrap items-center gap-3">
                       {isCurrent && (
-                        <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-accent">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-[12px] font-semibold text-accent-deep">
                           <span className="dot-pulse h-1.5 w-1.5 rounded-full bg-accent" />
                           Current role
                         </span>
@@ -63,11 +59,11 @@ export function Experience() {
                           {stack.map((slug) => (
                             <span
                               key={slug}
-                              className="flex h-5 w-5 items-center justify-center rounded-full"
+                              className="flex h-6 w-6 items-center justify-center rounded-[8px] ring-2 ring-white"
                               style={{ background: TECH_BRAND_COLORS[slug] ?? "var(--bg-raised-2)" }}
                               title={slug}
                             >
-                              <TechIcon slug={slug} size={11} className="text-white" />
+                              <TechIcon slug={slug} size={12} className="text-white" />
                             </span>
                           ))}
                         </div>
@@ -83,7 +79,7 @@ export function Experience() {
               );
             })}
           </Timeline>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

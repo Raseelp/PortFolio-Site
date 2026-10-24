@@ -10,42 +10,41 @@ import { playClick } from "@/lib/sound";
 interface ButtonProps {
   href: string;
   children: ReactNode;
-  variant?: "primary" | "secondary";
+  /** primary: solid ink with a yellow arrow chip. secondary: white with a
+   * ring. light: a white pill for a blue panel. gold: yellow, for dark
+   * panels. outline: a ghost pill with a light ring, for dark panels. */
+  variant?: "primary" | "secondary" | "light" | "gold" | "outline";
   external?: boolean;
-  icon?: boolean;
+  /** Passed through to the anchor, e.g. a download filename. */
+  download?: string;
   onClick?: () => void;
 }
 
-export function Button({
-  href,
-  children,
-  variant = "primary",
-  external = false,
-  icon = true,
-  onClick,
-}: ButtonProps) {
+const BASE =
+  "group inline-flex h-12 items-center justify-center whitespace-nowrap rounded-full text-[15px] font-bold transition-[transform,background-color,box-shadow] duration-300 ease-[var(--ease-out)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]";
+
+const VARIANTS = {
+  primary: "bg-ink pl-6 pr-1.5 text-white shadow-[0_8px_20px_-8px_rgba(15,16,48,0.6)] hover:shadow-[0_14px_28px_-8px_rgba(15,16,48,0.6)]",
+  secondary: "bg-white px-6 text-fg ring-1 ring-ink/10 hover:bg-bg-raised-2",
+  light: "bg-white px-6 text-ink shadow-[0_8px_20px_-10px_rgba(10,20,120,0.6)] hover:shadow-[0_14px_28px_-10px_rgba(10,20,120,0.6)]",
+  gold: "bg-accent-gold px-6 text-ink hover:brightness-105",
+  outline: "px-6 text-white ring-1 ring-white/30 hover:bg-white/10",
+};
+
+export function Button({ href, children, variant = "primary", external = false, download, onClick }: ButtonProps) {
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const reduce = useReducedMotion();
+  // A small magnetic lean toward the cursor, on the primary pill only.
   const magnetic = variant === "primary" && !reduce;
-
-  const base =
-    "group inline-flex items-center gap-2 rounded-full pl-6 pr-2 py-2 text-[15px] font-medium transition-colors duration-300 active:scale-[0.98] whitespace-nowrap";
-
-  const variants = {
-    primary:
-      "border border-accent bg-transparent text-accent shadow-[0_0_20px_-4px_rgba(31,188,253,0.5)] hover:bg-accent hover:text-[#01141c]",
-    secondary:
-      "bg-bg text-fg border border-border-strong hover:bg-white/[0.06] pr-6",
-  };
 
   function handlePointerMove(e: PointerEvent<HTMLElement>) {
     if (!magnetic) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const relX = e.clientX - rect.left - rect.width / 2;
     const relY = e.clientY - rect.top - rect.height / 2;
-    mx.set(Math.max(-7, Math.min(7, relX * 0.25)));
-    my.set(Math.max(-6, Math.min(6, relY * 0.35)));
+    mx.set(Math.max(-6, Math.min(6, relX * 0.22)));
+    my.set(Math.max(-4, Math.min(4, relY * 0.3)));
   }
 
   function handlePointerLeave() {
@@ -63,27 +62,32 @@ export function Button({
     <motion.span
       style={magnetic ? { x: mx, y: my } : undefined}
       transition={{ type: "spring", stiffness: 300, damping: 18 }}
-      className="inline-flex items-center gap-2"
+      className="inline-flex items-center gap-3"
     >
-      <span>{children}</span>
-      {icon && variant === "primary" && (
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/15 transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:bg-black/15">
+      {children}
+      {variant === "primary" && (
+        <span
+          aria-hidden
+          className="arrow-chip flex h-9 w-9 items-center justify-center rounded-full bg-accent-gold text-ink"
+        >
           <ArrowUpRight size={16} weight="bold" />
         </span>
       )}
     </motion.span>
   );
 
-  if (external) {
+  const className = `${BASE} ${VARIANTS[variant]}`;
+
+  if (external || download) {
     return (
       <a
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        download={download}
         onClick={handleClick}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
-        className={`${base} ${variants[variant]}`}
+        className={className}
       >
         {content}
       </a>
@@ -96,7 +100,7 @@ export function Button({
       onClick={handleClick}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className={`${base} ${variants[variant]}`}
+      className={className}
     >
       {content}
     </Link>

@@ -7,7 +7,7 @@
  */
 export function ProjectMedia({ videoUrl, className }: { videoUrl: string; className?: string }) {
   return (
-    <div className={`relative overflow-hidden bg-bg-raised ${className ?? ""}`}>
+    <div className={`relative overflow-hidden bg-[#151517] ${className ?? ""}`}>
       <video
         src={videoUrl}
         autoPlay
@@ -16,11 +16,11 @@ export function ProjectMedia({ videoUrl, className }: { videoUrl: string; classN
         playsInline
         className="h-full w-full object-cover"
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
       {/* Width-constrained and allowed to wrap — the phone frame this sits
           in is a fixed ~190px at every viewport, too narrow for this whole
           phrase on one nowrap line (it was clipping at both edges). */}
-      <span className="absolute inset-x-2 bottom-2.5 mx-auto w-fit max-w-[88%] rounded-xl bg-bg/70 px-2.5 py-1 text-center font-mono text-[9px] uppercase leading-snug tracking-[0.08em] text-fg-faint backdrop-blur-sm">
+      <span className="absolute inset-x-2 bottom-2.5 mx-auto w-fit max-w-[88%] rounded-2xl bg-white/90 px-2.5 py-1 text-center font-mono text-[9px] uppercase leading-snug tracking-[0.08em] text-fg-muted">
         Placeholder footage · real demo coming soon
       </span>
     </div>

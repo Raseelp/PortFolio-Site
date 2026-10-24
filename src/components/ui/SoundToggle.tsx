@@ -112,17 +112,11 @@ export function SoundToggle() {
       aria-label={enabled ? "Mute sound" : "Enable sound"}
       aria-pressed={enabled}
       title={enabled ? "Mute sound" : "This site has a few sound effects — click to enable"}
-      className={`liquid-glass group fixed left-5 top-5 z-50 flex h-11 w-11 items-center justify-center rounded-[22px] transition-colors duration-300 ${
-        enabled ? "text-accent" : "text-fg-muted hover:text-accent"
+      // A solid white round button docked bottom-right with the Snake one:
+      // opaque, so whatever scrolls under it can never show through.
+      className={`group fixed bottom-4 right-4 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[var(--shadow-float)] ring-1 ring-black/[0.05] transition-[color,transform] duration-300 hover:-translate-y-0.5 active:scale-95 ${
+        enabled ? "text-accent-deep" : "text-fg-muted hover:text-fg"
       }`}
-      // liquid-glass's own background is fully transparent (blur only, no
-      // tint) — fine floating over the hero's controlled dark backdrop, but
-      // this button is fixed and stays over whatever page content scrolls
-      // underneath it, and bright headings were showing through as a messy
-      // legible-ish blur. A real tint (inline so it beats the class's own
-      // background rule) is what actual frosted glass needs to read as
-      // "glass over content" instead of "content with a blur filter on it."
-      style={{ background: "color-mix(in srgb, var(--bg) 78%, transparent)" }}
     >
       <SoundIcon enabled={enabled} playState={playState} />
     </button>

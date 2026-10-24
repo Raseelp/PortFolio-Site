@@ -1,4 +1,5 @@
 import { FolderOpen } from "@phosphor-icons/react/dist/ssr";
+import { InspectorOverlay } from "../../ui/InspectorOverlay";
 import { RevealGroup, RevealItem } from "../../ui/Reveal";
 import { TechIcon } from "../../ui/TechIcon";
 import { skillGroups } from "@/lib/content";
@@ -7,11 +8,12 @@ import { TECH_LABEL_ICONS, TECH_BRAND_COLORS, type TechIconSlug } from "@/lib/te
 /** Variant 2 — a file-explorer / `tree` command layout: each category is a folder, each skill a file. */
 export function BrowseTree() {
   return (
-    <RevealGroup className="mt-14 flex flex-col gap-6 font-mono text-[14px]">
+    <RevealGroup className="insp-host relative mx-auto mt-10 grid max-w-4xl gap-x-12 gap-y-8 rounded-[2rem] bg-white p-8 font-mono text-[14px] shadow-[var(--shadow-card)] md:grid-cols-2 md:rounded-[2.5rem] md:p-12">
+      <InspectorOverlay label="Tree" tagSide="right" />
       {skillGroups.map((group) => (
         <RevealItem key={group.label}>
           <div className="flex items-center gap-2 text-fg">
-            <FolderOpen size={16} weight="bold" className="text-accent" />
+            <FolderOpen size={16} weight="bold" className="text-accent-deep" />
             <span className="font-semibold">{group.label}</span>
             <span className="text-fg-faint">/</span>
           </div>

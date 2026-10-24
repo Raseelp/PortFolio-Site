@@ -9,7 +9,7 @@ const ALL_SKILLS = Array.from(new Set(skillGroups.flatMap((g) => g.items)));
 /** The ambient, personality-forward view — a continuous scrolling strip. */
 export function TechStackFlow() {
   return (
-    <Reveal delay={0.1} className="mt-14">
+    <Reveal delay={0.15} className="mt-10">
       <div
         className="overflow-hidden py-2"
         style={{
@@ -19,7 +19,7 @@ export function TechStackFlow() {
             "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
         }}
       >
-        <div className="marquee-track flex w-max items-center gap-2">
+        <div className="marquee-track flex w-max items-center gap-3">
           {[...ALL_SKILLS, ...ALL_SKILLS].map((item, i) => (
             <TechChip key={`${item}-${i}`} label={item} size="lg" />
           ))}

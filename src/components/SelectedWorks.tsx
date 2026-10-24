@@ -1,22 +1,15 @@
 import { Container } from "./ui/Container";
-import { Reveal } from "./ui/Reveal";
+import { SectionHeading } from "./ui/SectionHeading";
 import { projects } from "@/lib/content";
 import { PhoneCards } from "./projects/variants/PhoneCards";
 
 export function SelectedWorks() {
   return (
-    <section id="work" className="bg-bg py-20 md:py-28">
+    <section id="work" className="py-16 md:py-24">
       <Container>
-        <Reveal>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-            Selected works
-          </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-fg md:text-4xl">
-            What I&apos;ve been building
-          </h2>
-        </Reveal>
+        <SectionHeading sparks eyebrow="Selected work" lead="What I've been" mark="building" sub="A few things I shipped lately." />
 
-        <div className="mt-14">
+        <div className="mt-12 md:mt-16">
           <PhoneCards projects={projects} />
         </div>
       </Container>

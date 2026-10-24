@@ -1,23 +1,19 @@
 import { Trophy } from "@phosphor-icons/react/dist/ssr";
 import { Container } from "./ui/Container";
+import { InspectorOverlay } from "./ui/InspectorOverlay";
 import { Reveal } from "./ui/Reveal";
+import { SectionHeading } from "./ui/SectionHeading";
 import { Timeline, TimelineEntry } from "./ui/Timeline";
 import { education, achievement } from "@/lib/content";
 
 export function Education() {
   return (
-    <section id="education" className="bg-bg py-20 md:py-28">
+    <section id="education" className="py-16 md:py-24">
       <Container>
-        <Reveal>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-            Education
-          </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-fg md:text-4xl">
-            Where it started
-          </h2>
-        </Reveal>
+        <SectionHeading eyebrow="Education" lead="Where it" mark="started" sub="The classroom side of the story." />
 
-        <div className="mt-14">
+        <Reveal delay={0.1} className="insp-host relative mt-12 rounded-[2rem] bg-white p-6 shadow-[var(--shadow-card)] md:mt-16 md:rounded-[2.5rem] md:p-12">
+          <InspectorOverlay label="Timeline" tagSide="right" />
           <Timeline>
             {education.map((entry) => (
               <TimelineEntry
@@ -27,16 +23,18 @@ export function Education() {
                 org={entry.school}
                 location={entry.location}
               >
-                {entry.note && <p className="text-[13px] text-fg-faint">{entry.note}</p>}
+                {entry.note && <p className="text-[13px] font-medium text-fg-faint">{entry.note}</p>}
               </TimelineEntry>
             ))}
           </Timeline>
-        </div>
+        </Reveal>
 
-        <Reveal delay={0.1} className="mt-10 pl-9 md:pl-12">
-          <div className="flex items-start gap-3 rounded-[var(--radius-panel-inner)] border border-accent-soft-border bg-accent-soft p-5">
-            <Trophy size={20} weight="fill" className="mt-0.5 shrink-0 text-accent" />
-            <p className="text-[14.5px] leading-relaxed text-fg">{achievement}</p>
+        <Reveal delay={0.15} className="mt-6 flex justify-center">
+          <div className="inline-flex max-w-2xl items-center gap-3 rounded-[1.75rem] bg-fg py-3 pl-3 pr-6 text-white shadow-[var(--shadow-float)] md:rounded-full">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent">
+              <Trophy size={18} weight="fill" className="text-white" />
+            </span>
+            <p className="text-[14.5px] font-semibold leading-snug">{achievement}</p>
           </div>
         </Reveal>
       </Container>

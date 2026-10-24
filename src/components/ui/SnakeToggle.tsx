@@ -76,9 +76,10 @@ export function SnakeToggle() {
       requestSnakeStop();
     } else {
       // The button is fixed and visible from anywhere on the page, but the
-      // game itself only exists inside the hero — starting it from
-      // scrolled-away content would arm a run nobody can see.
-      smoothScrollToHash("#top");
+      // game itself only exists inside the hero panel (#top) — starting it
+      // from scrolled-away content would arm a run nobody can see. The
+      // negative offset stops the panel just below the floating nav.
+      smoothScrollToHash("#top", -88);
       requestSnakeStart();
     }
   }
@@ -94,12 +95,9 @@ export function SnakeToggle() {
       aria-label={active ? "Stop Snake" : "Play Snake"}
       aria-pressed={active}
       title={active ? "Stop Snake" : "There's a hidden Snake game in the grid above — click to play"}
-      className={`liquid-glass group fixed left-[4.75rem] top-5 z-50 flex h-11 w-11 items-center justify-center rounded-[22px] transition-colors duration-300 ${
-        active ? "text-accent" : "text-fg-muted hover:text-accent"
+      className={`group fixed bottom-4 right-[4.25rem] z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-[var(--shadow-float)] ring-1 ring-black/[0.05] transition-[color,transform] duration-300 hover:-translate-y-0.5 active:scale-95 ${
+        active ? "text-accent-deep" : "text-fg-muted hover:text-fg"
       }`}
-      // Same fix as SoundToggle: a real tint behind the blur so scrolled-in
-      // content reads as a soft dark blur instead of showing through legibly.
-      style={{ background: "color-mix(in srgb, var(--bg) 78%, transparent)" }}
     >
       <SnakeIcon playState={playState} />
     </button>

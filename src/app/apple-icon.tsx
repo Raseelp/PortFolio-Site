@@ -17,10 +17,10 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#070c12",
+          background: "#2f5bff",
         }}
       >
-        <svg width="104" height="104" viewBox="0 0 24 24" fill="#1fbcfd">
+        <svg width="104" height="104" viewBox="0 0 24 24" fill="#ffffff">
           <path d={flutterPath} />
         </svg>
       </div>

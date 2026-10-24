@@ -1,66 +1,72 @@
 @import "tailwindcss";
 
 :root {
-  /* Dark base with a deliberate cool-navy cast (not neutral grey) so the
-     whole page reads as one considered "midnight" palette that the blue
-     accent belongs to, rather than a grey dark-theme with blue bolted on. */
-  --bg: #0a0f16;
-  --bg-raised: #111a26;
-  --bg-raised-2: #182535;
+  /* A cool, bright palette: a faint periwinkle page with pure-white cards,
+     deep indigo ink instead of black, one electric "Flutter" blue that does
+     the heavy lifting (panels, the headline word, active states) and a sun
+     yellow reserved for small highlights (marker underlines, the CTA).
+     Everything is a token so components never hard-code a color; the few
+     canvas/SVG spots that can't read a CSS var resolve one at mount. */
+  --bg: #f4f5fb;
+  --bg-raised: #ffffff;
+  --bg-raised-2: #ebedf7;
 
-  /* Text: cool-tinted light grey, never pure white */
-  --fg: #e6ebf2;
-  --fg-muted: #93a2b8;
-  --fg-faint: #6c7b91;
+  --ink: #0f1030;
 
-  /* Hairlines, cool-tinted since the base is dark */
-  --border: rgba(200, 220, 245, 0.08);
-  --border-strong: rgba(200, 220, 245, 0.16);
+  /* Ink, descending. All three clear WCAG AA (4.5:1) on white; fg-faint is
+     for captions and metadata, not body copy. */
+  --fg: #0f1030;
+  --fg-muted: #4f5275;
+  --fg-faint: #666a8b;
 
-  /* Color system: each hue has a job, not just decoration.
-     - base:  vivid, for solid fills (buttons, icons, borders at moderate opacity)
-     - deep:  a lighter/paler tint of the same hue, legible as TEXT on the dark page
-     - soft:  a translucent tint, for pill backgrounds and glows
-     - soft-border: a translucent border to match `soft`
-     Flutter's own brand turquoise-blue is the single signature accent —
-     CTAs, the current-role marker, the cursor, one line of the hero
-     split-type. Purple and amber mark the two Selected Works cards, kept
-     deliberately distinct from the signature blue rather than near-copies
-     of it. Periwinkle is a rare tertiary touch (stat numbers). */
-  --accent: #1fbcfd;
-  --accent-deep: #8fe3ff;
-  --accent-soft: rgba(31, 188, 253, 0.12);
-  --accent-soft-border: rgba(31, 188, 253, 0.4);
+  --border: rgba(15, 16, 48, 0.07);
+  --border-strong: rgba(15, 16, 48, 0.15);
 
-  --accent-warm: #9880ff;
-  --accent-warm-deep: #b9a8ff;
-  --accent-warm-soft: rgba(152, 128, 255, 0.14);
-  --accent-warm-soft-border: rgba(152, 128, 255, 0.4);
+  /* Blue. `accent` is the vivid brand fill (panels, dots, icon chips, the
+     cursor); `accent-deep` is a darker step that passes 4.5:1 as TEXT on
+     white. White text on the panel's blue is 5:1+, so body-size copy can sit
+     directly on a panel. */
+  --accent: #2f5bff;
+  --accent-deep: #2336d9;
+  --accent-soft: rgba(47, 91, 255, 0.1);
+  --accent-soft-border: rgba(47, 91, 255, 0.4);
 
-  --accent-gold: #ffb238;
-  --accent-gold-deep: #ffd27a;
-  --accent-gold-soft: rgba(255, 178, 56, 0.14);
-  --accent-gold-soft-border: rgba(255, 178, 56, 0.4);
+  --panel-top: #4a78ff;
+  --panel-mid: #2f55f5;
+  --panel-bottom: #2a2fd4;
 
-  --accent-sky: #6c8cff;
-  --accent-sky-deep: #aac0ff;
-  --accent-violet: #9880ff;
-  --accent-violet-deep: #b9a8ff;
-  --accent-pink: #ff6ba8;
-  --accent-pink-deep: #ff9bc4;
+  /* Sun yellow: highlights only. Always paired with ink text. */
+  --accent-gold: #ffc933;
+  --accent-gold-deep: #8a6200;
 
-  --radius-panel: 28px;
-  --radius-panel-inner: 20px;
+  /* Supporting hues: tiny touches only (festival confetti, the odd chip) */
+  --accent-warm: #7b5cff;
+  --accent-warm-deep: #5b3fd6;
+  --accent-sky: #38bdf8;
+  --accent-sky-deep: #0b7fb8;
+  --accent-violet: #7b5cff;
+  --accent-violet-deep: #5b3fd6;
+  --accent-pink: #ff5c93;
+  --accent-pink-deep: #d1306a;
+
+  --radius-panel: 2rem;
+  --radius-panel-inner: 1.5rem;
   --radius-pill: 999px;
 
+  --shadow-card: 0 1px 2px rgba(15, 16, 48, 0.04), 0 8px 28px rgba(15, 16, 48, 0.06);
+  --shadow-card-hover: 0 2px 4px rgba(15, 16, 48, 0.05), 0 18px 44px rgba(15, 16, 48, 0.12);
+  --shadow-float: 0 8px 30px rgba(15, 16, 48, 0.12);
+  --shadow-panel: 0 30px 60px -30px rgba(30, 50, 200, 0.55);
+
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-raised: var(--bg-raised);
   --color-bg-raised-2: var(--bg-raised-2);
+  --color-ink: var(--ink);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-faint: var(--fg-faint);
@@ -72,19 +78,16 @@
   --color-accent-soft-border: var(--accent-soft-border);
   --color-accent-warm: var(--accent-warm);
   --color-accent-warm-deep: var(--accent-warm-deep);
-  --color-accent-warm-soft: var(--accent-warm-soft);
-  --color-accent-warm-soft-border: var(--accent-warm-soft-border);
   --color-accent-gold: var(--accent-gold);
   --color-accent-gold-deep: var(--accent-gold-deep);
-  --color-accent-gold-soft: var(--accent-gold-soft);
-  --color-accent-gold-soft-border: var(--accent-gold-soft-border);
   --color-accent-sky: var(--accent-sky);
   --color-accent-sky-deep: var(--accent-sky-deep);
   --color-accent-violet: var(--accent-violet);
   --color-accent-violet-deep: var(--accent-violet-deep);
   --color-accent-pink: var(--accent-pink);
   --color-accent-pink-deep: var(--accent-pink-deep);
-  --font-sans: "General Sans", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-bricolage), var(--font-jakarta), system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -93,7 +96,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -102,8 +105,8 @@ body {
 }
 
 ::selection {
-  background: var(--accent-soft-border);
-  color: var(--fg);
+  background: var(--accent-gold);
+  color: var(--ink);
 }
 
 ::-webkit-scrollbar {
@@ -113,101 +116,62 @@ body {
   background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-raised-2);
+  background: var(--border-strong);
   border-radius: var(--radius-pill);
   border: 2px solid var(--bg);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
-}
-
-/* Glass panel: a frosted card floating above a color-zone section. Used
-   sparingly, only on project surfaces (see brief). */
-.glass-shell {
-  position: relative;
-  border-radius: var(--radius-panel);
-  border: 1px solid var(--border);
-  background: linear-gradient(
-    155deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.02)
-  );
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 30px 70px -28px rgba(0, 0, 0, 0.6);
-}
-
-.glass-core {
-  border-radius: var(--radius-panel-inner);
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-}
-
-.glass-blur {
-  background: rgba(255, 255, 255, 0.05);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  backdrop-filter: blur(20px) saturate(140%);
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .glass-blur {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: var(--bg-raised);
-  }
-}
-
-.demo-stage.glass-shell {
-  border-color: rgba(255, 255, 255, 0.12);
-  background: linear-gradient(
-    155deg,
-    rgba(255, 255, 255, 0.07),
-    rgba(255, 255, 255, 0.02)
-  );
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 30px 70px -28px rgba(0, 0, 0, 0.7);
-}
-
-.demo-stage .glass-core {
-  background: var(--bg-raised);
-}
-
-.demo-stage .glass-blur {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--fg-faint);
 }
 
 .text-balance {
   text-wrap: balance;
 }
 
-/* Flat single-hue emphasis — the reference treats each split-type line as
-   one solid color, not a gradient sweep. Kept as a class for anywhere a
-   headline word needs the lime signature. */
-.text-ink {
-  color: var(--accent);
+/* The big rounded blue panel: a soft light bloom top-left, a violet bloom
+   bottom-right and a fine dot grid over a three-stop blue. All static (one
+   painted layer, no animation, no runtime filters). */
+.accent-panel {
+  background-color: var(--panel-mid);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1.5px),
+    radial-gradient(60% 70% at 14% 6%, rgba(140, 190, 255, 0.6), transparent 62%),
+    radial-gradient(55% 65% at 92% 96%, rgba(150, 70, 255, 0.5), transparent 64%),
+    linear-gradient(150deg, var(--panel-top) 0%, var(--panel-mid) 52%, var(--panel-bottom) 100%);
+  background-size: 22px 22px, auto, auto, auto;
 }
 
-/* Animated mesh-gradient blob, the hero visual's signature moment. */
-@keyframes blob-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(4%, -5%) scale(1.08);
-  }
-  66% {
-    transform: translate(-4%, 4%) scale(0.94);
-  }
+/* The same idea in ink, for the closing panel. */
+.ink-panel {
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1.5px),
+    radial-gradient(50% 60% at 12% 0%, rgba(47, 91, 255, 0.5), transparent 65%),
+    radial-gradient(45% 55% at 95% 100%, rgba(255, 201, 51, 0.28), transparent 65%);
+  background-size: 22px 22px, auto, auto;
 }
 
-.blob-animate {
-  animation: blob-float 16s ease-in-out infinite;
+/* Headline word in the brand blue. */
+.text-accent-grad {
+  background-image: linear-gradient(120deg, #3a64ff 0%, #2a2fd4 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* A yellow highlighter swipe behind the last word of a heading. */
+.marker {
+  background-image: linear-gradient(transparent 58%, var(--accent-gold) 58%, var(--accent-gold) 92%, transparent 92%);
+  background-repeat: no-repeat;
+  padding: 0 0.08em;
+  margin: 0 -0.08em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 /* Continuous tech-stack marquee. Duplicated content track scrolls one full
-   copy-width to the left, looping seamlessly. */
+   copy-width to the left, looping seamlessly. Pauses under the pointer. */
 @keyframes marquee-scroll {
   from {
     transform: translateX(0);
@@ -218,42 +182,44 @@ body {
 }
 
 .marquee-track {
-  animation: marquee-scroll 32s linear infinite;
+  animation: marquee-scroll 38s linear infinite;
 }
 
-/* Liquid glass: refractive frosted-glass surface for floating UI (the nav
-   button). Two backdrop-filter declarations stack on purpose — browsers
-   that don't understand url()-referenced SVG filters keep the plain blur;
-   browsers that do, get the full chromatic-displacement glass look. */
-.liquid-glass {
-  background: rgba(0, 0, 0, 0);
-  backdrop-filter: blur(16px) saturate(1.1);
-  backdrop-filter: url("#liquid-glass-filter") saturate(1.1);
-  box-shadow:
-    inset 0 0 2px 1px color-mix(in oklch, white 35%, transparent),
-    inset 0 0 10px 4px color-mix(in oklch, white 15%, transparent),
-    0 4px 16px rgba(0, 0, 0, 0.25),
-    0 8px 24px rgba(0, 0, 0, 0.2),
-    0 16px 56px rgba(0, 0, 0, 0.18);
+.marquee-track:hover {
+  animation-play-state: paused;
 }
 
-/* Timeline current-marker pulse — exact recipe from the reference site's
-   first-child node: a soft scale+glow breathe, baking the diamond's 45deg
-   rotation into every keyframe step (a CSS transform animation silently
-   replaces a separately-applied static `transform`, so it has to live
-   here, not alongside a Tailwind `rotate-45` utility). */
+/* Gentle idle float for decorative badges. Transform-only. */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(-7px) rotate(var(--r, 0deg));
+  }
+}
+
+.float-y {
+  animation: float-y 5.5s ease-in-out infinite;
+}
+
+/* Timeline current-marker pulse: a soft scale+ring breathe, baking the
+   diamond's 45deg rotation into every keyframe step (a CSS transform
+   animation silently replaces a separately-applied static `transform`, so
+   it has to live here, not alongside a Tailwind `rotate-45` utility). */
 @keyframes timeline-pulse {
   0% {
     transform: rotate(45deg) scale(1);
-    box-shadow: 0 0 5px 1px var(--accent);
+    box-shadow: 0 0 0 0 rgba(47, 91, 255, 0.45);
   }
   50% {
     transform: rotate(45deg) scale(1.2);
-    box-shadow: 0 0 10px 2px rgba(31, 188, 253, 0.4);
+    box-shadow: 0 0 0 7px rgba(47, 91, 255, 0);
   }
   100% {
     transform: rotate(45deg) scale(1);
-    box-shadow: 0 0 5px 1px var(--accent);
+    box-shadow: 0 0 0 0 rgba(47, 91, 255, 0);
   }
 }
 
@@ -261,40 +227,7 @@ body {
   animation: timeline-pulse 2.5s ease infinite;
 }
 
-/* Slow diagonal shimmer for the project media placeholder — reads as "a
-   video will load here" rather than a static gray box. */
-@keyframes media-shimmer {
-  0% {
-    background-position: -40% -40%;
-  }
-  100% {
-    background-position: 140% 140%;
-  }
-}
-
-.media-shimmer {
-  background-image: linear-gradient(
-    115deg,
-    transparent 40%,
-    var(--accent-soft) 50%,
-    transparent 60%
-  );
-  background-size: 260% 260%;
-  animation: media-shimmer 5s ease-in-out infinite alternate;
-}
-
-/* Subtle static film-grain — a fixed full-viewport SVG noise texture at
-   very low opacity, blended with `overlay` so it never washes out text.
-   Cheap (one inline data URI, no image request, no animation) and makes
-   the flat dark surfaces read as considered rather than flat. */
-.grain-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  mix-blend-mode: overlay;
-  opacity: 0.035;
-}
-
-/* Tech-stack view toggle — both paused by default, running only on
+/* Tech-stack view toggle: both paused by default, running only on
    hover (see [animation-play-state] in TogglePreview.tsx). Flow's dots
    loop left-to-right, a live miniature of the marquee; Browse's grid
    squares pulse in a stagger, a live miniature of the tree revealing. */
@@ -319,9 +252,7 @@ body {
   }
 }
 
-/* Small "current role" indicator dot in Work Experience — a plain opacity
-   breathe, distinct from `.timeline-pulse` (which bakes in a 45deg diamond
-   rotation this dot doesn't need). */
+/* Small "current role" indicator dot in Work Experience. */
 @keyframes dot-pulse {
   0%,
   100% {
@@ -336,10 +267,51 @@ body {
   animation: dot-pulse 2s ease-in-out infinite;
 }
 
+/* The widget-inspector outline (InspectorOverlay): hidden until the pointer is
+   over its host, and only on devices that can hover. */
+.insp {
+  opacity: 0;
+  transform: scale(0.985);
+  transition:
+    opacity 0.25s var(--ease-out),
+    transform 0.35s var(--ease-spring);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .insp-host:hover > .insp {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A terminal caret that blinks after the closing heading. Hard on/off, like a
+   real cursor. */
+@keyframes caret-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  55.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  animation: caret-blink 1.1s step-end infinite;
+}
+
+/* The arrow chip on a button turns a quarter on hover. */
+.arrow-chip {
+  transition: transform 0.45s var(--ease-spring);
+}
+.group:hover .arrow-chip {
+  transform: rotate(45deg);
+}
+
 /* Footer links: nothing until you touch them, then the underline draws in
    from the left (a transform, not a fade-in) and the trailing arrow slides
-   in with it — nothing to see until the hover, then a real underline being
-   drawn, not just an instant reveal. */
+   in with it. */
 .footer-link {
   position: relative;
   display: inline-flex;
@@ -380,7 +352,7 @@ body {
 }
 
 /* Only hide the native cursor once CustomCursor has confirmed a real
-   fine-pointer device and mounted — never on touch, never before its
+   fine-pointer device and mounted: never on touch, never before its
    post-hydration check runs. */
 body.custom-cursor-active,
 body.custom-cursor-active a,
@@ -389,6 +361,11 @@ body.custom-cursor-active button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none !important;
+    opacity: 1;
+  }
+
   *,
   *::before,
   *::after {
@@ -399,16 +376,16 @@ body.custom-cursor-active button {
   }
 }
 
-/* The Snake game's "GAME ON"/"GAME OVER" moment (see HeroTagline.tsx) — a
-   rainbow shimmer across the site's own accent palette, not a flat color,
-   for the festival treatment. The reduced-motion catch-all above already
-   freezes the animation for anyone who needs it. */
+/* The Snake game's "GAME ON"/"GAME OVER" moment (see HeroTagline.tsx): a
+   rainbow shimmer across a bright palette, not a flat color, for the
+   festival treatment. The reduced-motion catch-all above already freezes
+   the animation for anyone who needs it. */
 .festival-text {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.3));
+  filter: drop-shadow(0 2px 14px rgba(10, 20, 120, 0.35));
 }
 
 .festival-text-animated {

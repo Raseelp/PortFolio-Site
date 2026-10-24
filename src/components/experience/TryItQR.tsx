@@ -36,7 +36,7 @@ function QRSvg({ value, size = 108 }: { value: string; size?: number }) {
   return (
     <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} aria-hidden>
       <rect width={size} height={size} rx={6} fill="#fff" />
-      <path d={path} fill="var(--bg)" />
+      <path d={path} fill="var(--fg)" />
     </svg>
   );
 }
@@ -111,8 +111,8 @@ export function TryItQR({
         aria-label={`Try ${appName}`}
         className={`group inline-flex items-center gap-2 rounded-full border py-1 pl-3 pr-1 text-[12px] font-medium transition-colors duration-300 active:scale-[0.96] ${
           open
-            ? "border-accent bg-accent text-[#01141c]"
-            : "border-accent/60 bg-transparent text-accent shadow-[0_0_14px_-5px_rgba(31,188,253,0.6)] hover:border-accent hover:bg-accent hover:text-[#01141c]"
+            ? "border-fg bg-fg text-white"
+            : "border-border-strong bg-white text-fg hover:border-fg hover:bg-fg hover:text-white"
         }`}
       >
         <motion.span
@@ -123,7 +123,7 @@ export function TryItQR({
           Try it
           <span
             className={`flex h-6 w-6 items-center justify-center rounded-full transition-colors duration-300 ${
-              open ? "bg-black/15" : "bg-accent/15 group-hover:bg-black/15"
+              open ? "bg-white/20" : "bg-accent-soft group-hover:bg-white/20"
             }`}
           >
             <QrCode size={13} weight="bold" />
@@ -139,7 +139,7 @@ export function TryItQR({
             exit={reduce ? undefined : { opacity: 0, scale: 0.9, y: -6 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             style={{ transformOrigin: "top right" }}
-            className="liquid-glass absolute right-0 top-[calc(100%+10px)] z-20 flex w-[188px] flex-col items-center rounded-[var(--radius-panel-inner)] p-4"
+            className="absolute right-0 top-[calc(100%+10px)] z-20 flex w-[196px] flex-col items-center rounded-[1.5rem] bg-white p-4 shadow-[var(--shadow-float)] ring-1 ring-black/[0.05]"
           >
             <p className="self-start text-[12px] font-semibold text-fg">Try {shortName}</p>
 

@@ -1,35 +1,35 @@
-import { GithubLogo, Play } from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
-const PILL =
-  "inline-flex items-center gap-1.5 rounded-full border border-border-strong px-3 py-1.5 text-[12px] font-medium text-fg-muted";
+const LINK = "inline-flex items-center gap-1 text-[13.5px] font-semibold";
 
 /**
- * GitHub/demo pills. GitHub links to the project's repo when it has one;
- * the demo pill stays a quiet placeholder (no hosted demo exists yet), with
- * no hover state and a default cursor so it doesn't invite a click.
+ * GitHub and Demo as plain text links with an arrow. GitHub links to the
+ * project's repo when it has one; the Demo stays a quiet placeholder (no
+ * hosted demo exists yet), muted, with no hover state and a default cursor
+ * so it doesn't invite a click.
  */
 export function ProjectLinkButtons({ repo, className }: { repo?: string; className?: string }) {
   return (
-    <div className={`flex flex-wrap items-center gap-2 ${className ?? ""}`}>
+    <div className={`flex items-center gap-5 ${className ?? ""}`}>
       {repo ? (
         <a
           href={repo}
           target="_blank"
           rel="noopener noreferrer"
-          className={`${PILL} transition-colors duration-300 hover:border-accent/60 hover:text-accent`}
+          className={`${LINK} text-fg underline decoration-accent-gold decoration-2 underline-offset-4 transition-colors duration-300 hover:text-accent-deep`}
         >
-          <GithubLogo size={13} />
           GitHub
+          <ArrowUpRight size={13} weight="bold" />
         </a>
       ) : (
-        <span className={`${PILL} cursor-default`}>
-          <GithubLogo size={13} />
+        <span className={`${LINK} cursor-default text-fg-faint`}>
           GitHub
+          <ArrowUpRight size={13} weight="bold" />
         </span>
       )}
-      <span className={`${PILL} cursor-default`}>
-        <Play size={12} weight="fill" />
+      <span className={`${LINK} cursor-default text-fg-faint`}>
         Demo
+        <ArrowUpRight size={13} weight="bold" />
       </span>
     </div>
   );
