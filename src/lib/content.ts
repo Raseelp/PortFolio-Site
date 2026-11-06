@@ -64,6 +64,14 @@ export interface Project {
   previewVideo: string;
   /** The project's public GitHub repo, linked from the card's GitHub pill. */
   repo?: string;
+  /** A landscape (16:9) product film. When present the project gets the wide
+   * "screening" layout instead of the phone card. `start` is in seconds. */
+  film?: {
+    src: string;
+    poster: string;
+    duration: number;
+    chapters: { label: string; start: number }[];
+  };
 }
 
 export const projects: Project[] = [
@@ -83,6 +91,21 @@ export const projects: Project[] = [
     ],
     previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
     repo: "https://github.com/Raseelp/Lost-and-Found-Offline-Search",
+    film: {
+      src: "/media/lost-and-found.mp4",
+      poster: "/media/lost-and-found-poster.jpg",
+      duration: 102,
+      chapters: [
+        { label: "The problem", start: 0 },
+        { label: "Describe it", start: 17 },
+        { label: "Faces into people", start: 24 },
+        { label: "Memories", start: 33 },
+        { label: "The cloud catch", start: 45 },
+        { label: "How it works", start: 63 },
+        { label: "Private and open", start: 81 },
+        { label: "Meet the app", start: 96 },
+      ],
+    },
   },
   {
     name: "iPhone Video to Android Converter",

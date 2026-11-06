@@ -3,10 +3,9 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 const LINK = "inline-flex items-center gap-1 text-[13.5px] font-semibold";
 
 /**
- * GitHub and Demo as plain text links with an arrow. GitHub links to the
- * project's repo when it has one; the Demo stays a quiet placeholder (no
- * hosted demo exists yet), muted, with no hover state and a default cursor
- * so it doesn't invite a click.
+ * The project's links as plain text with an arrow. Just GitHub for now (a
+ * muted, inert label when a project has no public repo); a Play Store link
+ * goes here once an app is released.
  */
 export function ProjectLinkButtons({ repo, className }: { repo?: string; className?: string }) {
   return (
@@ -27,10 +26,6 @@ export function ProjectLinkButtons({ repo, className }: { repo?: string; classNa
           <ArrowUpRight size={13} weight="bold" />
         </span>
       )}
-      <span className={`${LINK} cursor-default text-fg-faint`}>
-        Demo
-        <ArrowUpRight size={13} weight="bold" />
-      </span>
     </div>
   );
 }
