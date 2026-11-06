@@ -25,7 +25,7 @@ export function CursorMark({ x, y, rotate, hovering, pressed }: CursorMarkProps)
       aria-hidden
       viewBox="0 0 18 24"
       fill="none"
-      className="pointer-events-none fixed left-0 top-0 z-[100] -ml-0.5 -mt-0.5 h-[27px] w-5 drop-shadow-[0_3px_3px_rgba(15,16,48,0.28)]"
+      className="pointer-events-none fixed left-0 top-0 z-[200] -ml-0.5 -mt-0.5 h-[27px] w-5 drop-shadow-[0_3px_3px_rgba(15,16,48,0.28)]"
       style={{ x, y, rotate, transformOrigin: "2px 2px" }}
       animate={{ scale: pressed ? 0.82 : hovering ? 1.3 : 1 }}
       transition={{ type: "spring", stiffness: 520, damping: 22 }}

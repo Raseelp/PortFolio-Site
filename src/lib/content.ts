@@ -64,13 +64,18 @@ export interface Project {
   previewVideo: string;
   /** The project's public GitHub repo, linked from the card's GitHub pill. */
   repo?: string;
+  /** The app icon, shown beside the title in the featured layout. */
+  icon?: string;
+  /** Short facts shown under the title next to the icon, like an app listing. */
+  tags?: string[];
   /** A landscape (16:9) product film. When present the project gets the wide
    * "screening" layout instead of the phone card. `start` is in seconds. */
   film?: {
     src: string;
     poster: string;
     duration: number;
-    chapters: { label: string; start: number }[];
+    /** Optional. A film with chapters gets the featured screening layout. */
+    chapters?: { label: string; start: number }[];
   };
 }
 
@@ -91,6 +96,8 @@ export const projects: Project[] = [
     ],
     previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
     repo: "https://github.com/Raseelp/Lost-and-Found-Offline-Search",
+    icon: "/media/lost-and-found-icon.png",
+    tags: ["Android", "Open source", "Works offline"],
     film: {
       src: "/media/lost-and-found.mp4",
       poster: "/media/lost-and-found-poster.jpg",
@@ -122,6 +129,11 @@ export const projects: Project[] = [
     ],
     previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
     repo: "https://github.com/Raseelp/iPhone-Video-to-Android-Converter",
+    film: {
+      src: "/media/converter.mp4",
+      poster: "/media/converter-poster.jpg",
+      duration: 45,
+    },
   },
   {
     name: "Context-Aware Notification Assistant",
@@ -138,6 +150,12 @@ export const projects: Project[] = [
     ],
     previewVideo: "https://videos.pexels.com/video-files/7822022/7822022-sd_360_640_30fps.mp4",
     repo: "https://github.com/Raseelp/NotifierTTS-Native",
+    icon: "/media/readit-icon.png",
+    film: {
+      src: "/media/readit.mp4",
+      poster: "/media/readit-poster.jpg",
+      duration: 32,
+    },
   },
 ];
 

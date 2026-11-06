@@ -456,3 +456,22 @@ body.custom-cursor-active button {
   outline-offset: 4px;
   border-radius: 999px;
 }
+
+/* The pop-out's bezel: a yellow-to-blue frame with a wide blue glow. */
+.film-bezel {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, #7b97ff 55%, var(--accent) 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 40px 120px -24px rgba(47, 91, 255, 0.85),
+    0 18px 50px -20px rgba(0, 0, 0, 0.6);
+}
+
+/* For rows that scroll sideways on phones (the film's chapter chips): no
+   visible scrollbar track under them. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

@@ -6,6 +6,28 @@ export function slugsFor(tech: string): TechIconSlug[] {
   return Array.isArray(slugs) ? slugs : slugs ? [slugs] : [];
 }
 
+/**
+ * An app icon at listing size, with a hairline ring and a soft shadow so a
+ * light icon still holds its edge on a white card. It lifts a touch when the
+ * pointer is over the title row (the parent needs `group/title`). Decorative:
+ * the title beside it already names the app. `compact` is the card size;
+ * the default grows to 60px from md up, for the featured layout.
+ */
+export function AppIcon({ src, compact = false }: { src: string; compact?: boolean }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt=""
+      aria-hidden
+      width={256}
+      height={256}
+      draggable={false}
+      className={`h-11 w-11 shrink-0 rounded-[24%] shadow-[0_0_0_1px_rgba(15,16,48,0.08),0_8px_18px_-8px_rgba(15,16,48,0.45)] transition-transform duration-500 ease-[var(--ease-spring)] group-hover/title:-translate-y-1 group-hover/title:scale-105 ${compact ? "" : "md:h-[60px] md:w-[60px]"}`}
+    />
+  );
+}
+
 /** A mono date with a short yellow bar in front. */
 export function ProjectDate({ children }: { children: string }) {
   return (

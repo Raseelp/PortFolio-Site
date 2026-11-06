@@ -8,7 +8,7 @@ import { projects, type Project } from "@/lib/content";
 type FilmProject = Project & { film: NonNullable<Project["film"]> };
 
 function hasFilm(p: Project): p is FilmProject {
-  return !!p.film;
+  return !!p.film?.chapters?.length;
 }
 
 /**
@@ -22,7 +22,7 @@ export function SelectedWorks() {
   return (
     <section id="work" className="py-16 md:py-24">
       <Container>
-        <SectionHeading sparks eyebrow="Selected work" lead="What I've been" mark="building" sub="A few things I shipped lately." />
+        <SectionHeading sparks eyebrow="Selected personal projects" lead="What I've been" mark="building" sub="A few things I shipped lately." />
 
         {featured && (
           <Reveal className="mt-12 md:mt-16" y={24}>
