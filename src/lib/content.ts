@@ -129,6 +129,7 @@ export const projects: Project[] = [
     ],
     previewVideo: "https://videos.pexels.com/video-files/4201543/4201543-sd_640_360_30fps.mp4",
     repo: "https://github.com/Raseelp/iPhone-Video-to-Android-Converter",
+    icon: "/media/converter-icon.png",
     film: {
       src: "/media/converter.mp4",
       poster: "/media/converter-poster.jpg",
